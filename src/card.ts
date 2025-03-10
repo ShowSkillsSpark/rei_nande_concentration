@@ -15,18 +15,19 @@ export enum CardState {
 }
 
 export class Card extends Sprite {
-    _state: CardState = CardState.Ready;
-    _voiceId: number = 0;
-    audio: any = null;
+    _state: CardState;
+    _voiceId: number;
+    _audio: HTMLAudioElement;
 
     constructor(voiceType: string, voiceId: number, x: number, y: number) {
         super(readyTexture);
 
+        this._state = CardState.Ready;
         this._voiceId = voiceId;
+        this._audio = new Audio(assets.sound[voiceType][voiceId]);
+
         this.x = x;
         this.y = y;
-        this.audio = new Audio(assets.sound[voiceType][voiceId]);
-
         this.setSize(200, 200);
 
         this.eventMode = 'static';
@@ -60,7 +61,7 @@ export class Card extends Sprite {
     }
 
     playAudio(callback?: () => void) {
-        this.audio.onended = callback;
-        this.audio.play();
+        this._audio.onended = callback || null;
+        this._audio.play();
     }
 }

@@ -10,7 +10,7 @@ function shuffle(array: number[]) {
   while (currentIndex != 0) {
 
     // Pick a remaining element...
-    let randomIndex = Math.floor(Math.random() * currentIndex);
+    const randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex--;
 
     // And swap it with the current element.
@@ -53,10 +53,10 @@ function shuffle(array: number[]) {
   let selectedCard: Card | null = null;
 
   // voiceType 설정
-  let voiceType = 'nande';
+  const voiceType = 'nande';
 
   // size 설정
-  let size = 4;
+  const size = 4;
 
   // voiceId 선택
   let voiceIdList = Object.keys(assets.sound[voiceType]).map(Number);
@@ -67,7 +67,7 @@ function shuffle(array: number[]) {
   console.log(voiceIdList);
 
   // voiceIdList를 size x size로 배치
-  let voiceIdGrid: number[][] = [];
+  const voiceIdGrid: number[][] = [];
   for (let i = 0; i < size; i++) {
     voiceIdGrid[i] = voiceIdList.slice(i * size, i * size + size);
   }
@@ -86,13 +86,13 @@ function shuffle(array: number[]) {
             card.playAudio();
           } else if (selectedCard !== card) {
             console.log('select 2nd', card.voiceId);
-            let firstCard = selectedCard;
+            const firstCard = selectedCard;
             selectedCard = null;
             if (firstCard.voiceId === card.voiceId) { // 정답이면
               console.log('correct');
               card.state = CardState.Selected;
               card.playAudio(() => {
-                firstCard!!.state = CardState.Correct;
+                firstCard!.state = CardState.Correct;
                 card.state = CardState.Correct;
                 correctAudioList[Math.floor(Math.random() * correctAudioList.length)].play();
               });
@@ -100,10 +100,10 @@ function shuffle(array: number[]) {
               console.log('wrong');
               card.state = CardState.Selected;
               card.playAudio(() => {
-                firstCard!!.state = CardState.Wrong;
+                firstCard!.state = CardState.Wrong;
                 card.state = CardState.Wrong;
                 wrongAudioList[Math.floor(Math.random() * wrongAudioList.length)].play();
-                firstCard!!.state = CardState.Ready;
+                firstCard!.state = CardState.Ready;
                 card.state = CardState.Ready;
               });
             }
