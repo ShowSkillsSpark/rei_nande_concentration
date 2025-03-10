@@ -102,12 +102,7 @@ function shuffle(array: number[]) {
               card.playAudio(() => {
                 firstCard!.state = CardState.Correct;
                 card.state = CardState.Correct;
-                const audio = correctAudioList[Math.floor(Math.random() * correctAudioList.length)]
-                audio.onended = () => {
-                  firstCard!.state = CardState.Correct;
-                  card.state = CardState.Correct;
-                }
-                audio.play();
+                correctAudioList[Math.floor(Math.random() * correctAudioList.length)].play();
               });
             } else { // 오답이면
               console.log('wrong');
@@ -115,7 +110,7 @@ function shuffle(array: number[]) {
               card.playAudio(() => {
                 firstCard!.state = CardState.Wrong;
                 card.state = CardState.Wrong;
-                const audio = wrongAudioList[Math.floor(Math.random() * wrongAudioList.length)]
+                const audio = wrongAudioList[Math.floor(Math.random() * wrongAudioList.length)];
                 audio.onended = () => {
                   firstCard!.state = CardState.Ready;
                   card.state = CardState.Ready;

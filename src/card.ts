@@ -39,15 +39,23 @@ export class Card extends Sprite {
         switch (state) {
             case CardState.Ready:
                 this.texture = this._textures.ready;
+                this.eventMode = 'static';
+                this.cursor = 'pointer';
                 break;
             case CardState.Selected:
                 this.texture = this._textures.selected;
+                this.eventMode = 'passive';
+                this.cursor = 'default';
                 break;
             case CardState.Correct:
                 this.texture = this._textures.correct;
+                this.eventMode = 'passive';
+                this.cursor = 'default';
                 break;
             case CardState.Wrong:
                 this.texture = this._textures.wrong;
+                this.eventMode = 'passive';
+                this.cursor = 'default';
                 break;
         }
     }
