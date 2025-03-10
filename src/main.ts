@@ -1,4 +1,4 @@
-import { Application } from "pixi.js";
+import { Assets, Application } from "pixi.js";
 import { Card, CardState } from "./card";
 import { assets } from "./assets";
 
@@ -52,6 +52,14 @@ function shuffle(array: number[]) {
 
   let selectedCard: Card | null = null;
 
+  // texture 불러오기
+  const cardTextures = {
+    ready: await Assets.load(assets.image.ready),
+    selected: await Assets.load(assets.image.selected),
+    correct: await Assets.load(assets.image.correct),
+    wrong: await Assets.load(assets.image.wrong),
+  }
+
   // voiceType 설정
   const voiceType = 'nande';
 
@@ -76,7 +84,7 @@ function shuffle(array: number[]) {
 
   for (let i = 0; i < size; i++) {
     for (let j = 0; j < size; j++) {
-      const card = new Card(voiceType, voiceIdGrid[i][j], i * 220, j * 220);
+      const card = new Card(voiceType, voiceIdGrid[i][j], i * 220, j * 220, cardTextures);
       card.on("pointerdown", () => {
         if (card.state === CardState.Ready) {
           if (selectedCard == null) {

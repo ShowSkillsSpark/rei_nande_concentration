@@ -1,10 +1,5 @@
-import { Assets, Sprite } from "pixi.js";
+import { Sprite, Texture } from "pixi.js";
 import { assets } from "./assets";
-
-const readyTexture = await Assets.load(assets.image.ready);
-const selectedTexture = await Assets.load(assets.image.selected);
-const correctTexture = await Assets.load(assets.image.correct);
-const wrongTexture = await Assets.load(assets.image.wrong);
 
 
 export enum CardState {
@@ -18,13 +13,18 @@ export class Card extends Sprite {
     _state: CardState;
     _voiceId: number;
     _audio: HTMLAudioElement;
+    _textures: { ready: Texture, selected: Texture, correct: Texture, wrong: Texture };
 
-    constructor(voiceType: string, voiceId: number, x: number, y: number) {
-        super(readyTexture);
+    constructor(
+        voiceType: string, voiceId: number,
+        x: number, y: number,
+        textures: { ready: Texture, selected: Texture, correct: Texture, wrong: Texture }) {
+        super(textures.ready);
 
         this._state = CardState.Ready;
         this._voiceId = voiceId;
         this._audio = new Audio(assets.sound[voiceType][voiceId]);
+        this._textures = textures;
 
         this.x = x;
         this.y = y;
@@ -38,16 +38,16 @@ export class Card extends Sprite {
         this._state = state;
         switch (state) {
             case CardState.Ready:
-                this.texture = readyTexture;
+                this.texture = this._textures.ready;
                 break;
             case CardState.Selected:
-                this.texture = selectedTexture;
+                this.texture = this._textures.selected;
                 break;
             case CardState.Correct:
-                this.texture = correctTexture;
+                this.texture = this._textures.correct;
                 break;
             case CardState.Wrong:
-                this.texture = wrongTexture;
+                this.texture = this._textures.wrong;
                 break;
         }
     }
