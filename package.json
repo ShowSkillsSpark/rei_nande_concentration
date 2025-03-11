@@ -1,6 +1,6 @@
 {
   "name": "rei_nande_concentration",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,11 +8,14 @@
     "build": "npm run lint && tsc && vite build",
     "lint": "eslint .",
     "dev": "vite",
-    "deploy": "npm run build && gh-pages -d dist",
+    "deploy": "gh-pages -d dist",
     "eslint-fix": "eslint --fix ."
   },
   "dependencies": {
-    "pixi.js": "^8.8.1"
+    "@pixi/ui": "^2.2.2",
+    "pixi.js": "^8.8.1",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",

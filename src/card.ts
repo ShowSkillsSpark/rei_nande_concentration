@@ -1,7 +1,6 @@
 import { Sprite, Texture } from "pixi.js";
 import { assets } from "./assets";
 
-
 export enum CardState {
     Ready = 'ready',
     Selected = 'selected',
@@ -18,7 +17,8 @@ export class Card extends Sprite {
     constructor(
         voiceType: string, voiceId: number,
         x: number, y: number,
-        textures: { ready: Texture, selected: Texture, correct: Texture, wrong: Texture }) {
+        textures: { ready: Texture, selected: Texture, correct: Texture, wrong: Texture }
+    ) {
         super(textures.ready);
 
         this._state = CardState.Ready;

@@ -1,8 +1,9 @@
 const image: {[key: string]: string} = {
-    ready: "/rei_nande_concentration/assets/card/ready.png",
-    selected: "/rei_nande_concentration/assets/card/selected.png",
-    correct: "/rei_nande_concentration/assets/card/correct.png",
-    wrong: "/rei_nande_concentration/assets/card/wrong.png",
+    ready: "/rei_nande_concentration/assets/icon/ready.png",
+    selected: "/rei_nande_concentration/assets/icon/selected.png",
+    correct: "/rei_nande_concentration/assets/icon/correct.png",
+    wrong: "/rei_nande_concentration/assets/icon/wrong.png",
+    finish: "/rei_nande_concentration/assets/icon/finish.png",
 }
 
 const sound: {[key: string]: {[key: number]: string}} = {
@@ -10,8 +11,24 @@ const sound: {[key: string]: {[key: number]: string}} = {
         0: "/rei_nande_concentration/assets/sound/haa_20250310_24540-24550.wav",
         1: "/rei_nande_concentration/assets/sound/haa_20250310_24600-24610.wav",
     },
+    'hee': {
+        0: "/rei_nande_concentration/assets/sound/hee_20250310_1130-1140.wav",
+    },
+    'hello': {
+        0: "/rei_nande_concentration/assets/sound/hello_20250310_1025-1035.wav",
+        1: "/rei_nande_concentration/assets/sound/hello_20250310_1115-1125.wav",
+        2: "/rei_nande_concentration/assets/sound/hello_20250310_1130-1140.wav",
+    },
+    'hen': {
+        0: "/rei_nande_concentration/assets/sound/hen_20250310_1015-1025.wav",
+        1: "/rei_nande_concentration/assets/sound/hen_20250310_1025-1035.wav",
+    },
     'hidoi': {
         0: "/rei_nande_concentration/assets/sound/hidoi_20250310_24610-24620.wav",
+    },
+    'konrei': {
+        0: "/rei_nande_concentration/assets/sound/konrei_20250310_1115-1125.wav",
+        1: "/rei_nande_concentration/assets/sound/konrei_20250310_1130-1140.wav",
     },
     'kora': {
         0: "/rei_nande_concentration/assets/sound/kora_20250310_14830-14840.wav",
@@ -43,9 +60,14 @@ const sound: {[key: string]: {[key: number]: string}} = {
         1: "/rei_nande_concentration/assets/sound/sorry_20250310_22735-22745.wav",
     },
     'thx': {
-        0: "/rei_nande_concentration/assets/sound/thx_20250310_14830-14840.wav",
-        1: "/rei_nande_concentration/assets/sound/thx_20250310_34110-34120.wav",
-        2: "/rei_nande_concentration/assets/sound/thx_20250310_34955-35005.wav",
+        0: "/rei_nande_concentration/assets/sound/thx_20250310_1115-1125_1.wav",
+        1: "/rei_nande_concentration/assets/sound/thx_20250310_1115-1125_2.wav",
+        2: "/rei_nande_concentration/assets/sound/thx_20250310_14830-14840.wav",
+        3: "/rei_nande_concentration/assets/sound/thx_20250310_34110-34120.wav",
+        4: "/rei_nande_concentration/assets/sound/thx_20250310_34955-35005.wav",
+    },
+    'yoshi': {
+        0: "/rei_nande_concentration/assets/sound/yoshi_20250310_1025-1035.wav",
     },
     'zako': {
         0: "/rei_nande_concentration/assets/sound/zako_20250310_3915-3925.wav",
