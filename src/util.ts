@@ -19,15 +19,11 @@ export const shuffle = (array: any[]) => { // eslint-disable-line @typescript-es
 }
 
 export const fitToParent = (child: Container, parentWidth: number, parentHeight: number) => {
-    const textRatio = child.width / child.height;
-    const textWidth = parentWidth;
-    const textHeight = parentHeight;
-    const availableRatio = textWidth / textHeight;
-    if (textRatio > availableRatio) {
-        child.width = textWidth;
-        child.height = textWidth / textRatio;
+    if (child.width / child.height > parentWidth / parentHeight) {
+        child.height = child.height * parentWidth / child.width;
+        child.width = parentWidth;
     } else {
-        child.height = textHeight;
-        child.width = textHeight * textRatio;
+        child.width = child.width * parentHeight / child.height;
+        child.height = parentHeight;
     }
 }
