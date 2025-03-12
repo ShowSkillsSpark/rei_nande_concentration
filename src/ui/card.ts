@@ -1,5 +1,5 @@
 import { Sprite, Texture } from "pixi.js";
-import { assets } from "./assets";
+import { assets } from "../assets";
 
 export enum CardState {
     Ready = 'ready',
@@ -17,7 +17,8 @@ export class Card extends Sprite {
     constructor(
         voiceType: string, voiceId: number,
         x: number, y: number,
-        textures: { ready: Texture, selected: Texture, correct: Texture, wrong: Texture }
+        textures: { ready: Texture, selected: Texture, correct: Texture, wrong: Texture },
+        width: number, height: number,
     ) {
         super(textures.ready);
 
@@ -26,9 +27,11 @@ export class Card extends Sprite {
         this._audio = new Audio(assets.sound[voiceType][voiceId]);
         this._textures = textures;
 
-        this.x = x;
-        this.y = y;
-        this.setSize(200, 200);
+        const lesser = Math.min(width, height);
+        const cardSize = lesser * 0.9;
+        this.x = x + (width - cardSize) / 2;
+        this.y = y + (height - cardSize) / 2;
+        this.setSize(cardSize, cardSize);
 
         this.eventMode = 'static';
         this.cursor = 'pointer';
