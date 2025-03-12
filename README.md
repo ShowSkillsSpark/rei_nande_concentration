@@ -9,3 +9,4 @@
 ### 3. 게임 실행
     npm start
   ![개발 환경 세팅 4](https://github.com/user-attachments/assets/47225fdf-6f3f-47b8-91cb-5c2a1515a816)
+
