@@ -2,7 +2,7 @@ import { Container, Sprite, Texture } from "pixi.js";
 import { assets } from "../assets";
 import { Card, CardState } from "./card";
 import { shuffle } from "../util";
-import { setting } from "../store";
+import { store } from "../store";
 import { Scene } from "./scene";
 
 class Navigator extends Container {
@@ -22,7 +22,6 @@ class GameSpace extends Container {
         x: number, y: number, width: number, height: number,
         cardTextures: { ready: Texture, selected: Texture, correct: Texture, wrong: Texture },
         correctAudioList: HTMLAudioElement[], wrongAudioList: HTMLAudioElement[],
-        onFinish: () => void,
     ) {
         super();
 
@@ -31,8 +30,8 @@ class GameSpace extends Container {
         this.y = y;
         
         // voiceId 선택
-        let voiceIdList = Object.keys(assets.sound[setting.voiceType]).map(Number);
-        voiceIdList = shuffle(voiceIdList).slice(0, setting.cardCount * setting.cardCount / 2);
+        let voiceIdList = Object.keys(assets.sound[store.voiceType]).map(Number);
+        voiceIdList = shuffle(voiceIdList).slice(0, store.cardCount * store.cardCount / 2);
         voiceIdList = voiceIdList.concat(voiceIdList);
         voiceIdList = shuffle(voiceIdList);
 
@@ -40,20 +39,20 @@ class GameSpace extends Container {
 
         // voiceIdList를 n x n으로 배치
         const voiceIdGrid: number[][] = [];
-        for (let i = 0; i < setting.cardCount; i++) {
-            voiceIdGrid[i] = voiceIdList.slice(i * setting.cardCount, i * setting.cardCount + setting.cardCount);
+        for (let i = 0; i < store.cardCount; i++) {
+            voiceIdGrid[i] = voiceIdList.slice(i * store.cardCount, i * store.cardCount + store.cardCount);
         }
 
         console.log(voiceIdGrid);
 
         let correctCount = 0;
 
-        const cardMaxWidth = width / setting.cardCount;
-        const cardMaxHeight = height / setting.cardCount;
+        const cardMaxWidth = width / store.cardCount;
+        const cardMaxHeight = height / store.cardCount;
         // 카드 생성
-        for (let i = 0; i < setting.cardCount; i++) {
-            for (let j = 0; j < setting.cardCount; j++) {
-            const card = new Card(setting.voiceType, voiceIdGrid[i][j], i * cardMaxWidth, j * cardMaxHeight, cardTextures, cardMaxWidth, cardMaxHeight);
+        for (let i = 0; i < store.cardCount; i++) {
+            for (let j = 0; j < store.cardCount; j++) {
+            const card = new Card(store.voiceType, voiceIdGrid[i][j], i * cardMaxWidth, j * cardMaxHeight, cardTextures, cardMaxWidth, cardMaxHeight);
             card.on("pointerdown", () => {
                 if (card.state === CardState.Ready) {
                 if (this._selectedCard == null) {
@@ -72,7 +71,7 @@ class GameSpace extends Container {
                             firstCard.state = CardState.Correct;
                             card.state = CardState.Correct;
                             correctCount += 2;
-                            if (correctCount == setting.cardCount ** 2) this.gameClear();
+                            if (correctCount == store.cardCount ** 2) this.gameClear();
                             else correctAudioList[Math.floor(Math.random() * correctAudioList.length)].play();
                         });
                     } else { // 오답이면
@@ -111,12 +110,11 @@ export class GameScene extends Scene {
     constructor(
         cardTextures: { ready: Texture, selected: Texture, correct: Texture, wrong: Texture },
         correctAudioList: HTMLAudioElement[], wrongAudioList: HTMLAudioElement[],
-        onFinish: () => void,
     ) {
         super();
 
         const navigator = new Navigator(this.width, this.height * 0.1);
-        const gameSpace = new GameSpace(0, this.height * 0.1, this.width, this.height * 0.9, cardTextures, correctAudioList, wrongAudioList, onFinish);
+        const gameSpace = new GameSpace(0, this.height * 0.1, this.width, this.height * 0.9, cardTextures, correctAudioList, wrongAudioList);
         this.addChild(navigator);
         this.addChild(gameSpace);
     }

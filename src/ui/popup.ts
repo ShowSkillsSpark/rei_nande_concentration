@@ -1,5 +1,4 @@
-import { Container, Graphics, Renderer } from "pixi.js";
-import { fitToParent } from "../util";
+import { Container, Graphics } from "pixi.js";
 
 export class Popup extends Container {
     constructor (visible = false) {

@@ -1,4 +1,4 @@
-export const setting = new class {
+export const store = new class {
     // voice type
     _availableVoiceTypeList: string[] = ['nande'];
     _voiceTypeIndex = 0;

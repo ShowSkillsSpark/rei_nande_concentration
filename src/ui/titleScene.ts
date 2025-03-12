@@ -2,7 +2,7 @@ import { Graphics, Text } from "pixi.js";
 import { FancyButton } from "@pixi/ui";
 import { fitToParent } from "../util";
 import { Scene } from "./scene";
-import { setting } from "../store";
+import { store } from "../store";
 
 interface CommonButtonParam { text?: string, x: number, y: number, width: number, height: number };
 class CommonButton extends FancyButton {
@@ -49,11 +49,11 @@ class StartButton extends CommonButton {
 
 class VoiceTypeButton extends CommonButton {
     constructor(param: CommonButtonParam) {
-        super({...param, text: setting.voiceTypeString});
+        super({...param, text: store.voiceTypeString});
 
         this.onclick = () => {
-            setting.nextVoiceType();
-            this.text = setting.voiceTypeString;
+            store.nextVoiceType();
+            this.text = store.voiceTypeString;
         };
     }
 
@@ -61,11 +61,11 @@ class VoiceTypeButton extends CommonButton {
 
 class SizeButton extends CommonButton {
     constructor(param: CommonButtonParam) {
-        super({...param, text: setting.cardCountString});
+        super({...param, text: store.cardCountString});
 
         this.onclick = () => {
-            setting.nextCardCount();
-            this.text = setting.cardCountString;
+            store.nextCardCount();
+            this.text = store.cardCountString;
         };
     }
 }
@@ -124,7 +124,7 @@ export class TitleScene extends Scene {
             x: (this.width - buttonWidht) / 2,
             y: this.height * 0.35 + (buttonHeight + buttonGap) * 0,
             width: buttonWidht, height: buttonHeight,
-        }, startAudioList, () => navGameScene(setting.voiceType, setting.cardCount));
+        }, startAudioList, () => navGameScene());
         const voiceTypeButton = new VoiceTypeButton({
             x: (this.width - buttonWidht) / 2,
             y: this.height * 0.35 + (buttonHeight + buttonGap) * 1,

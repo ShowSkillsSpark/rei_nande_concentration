@@ -64,10 +64,10 @@ import { GameScene } from "./ui/gameScene";
             app.stage.removeChildren();
             const game = new GameScene(
                 cardTextures, correctAudioList, wrongAudioList,
-                () => {
-                    app.stage.removeChildren();
-                    app.stage.addChild(menu);
-                },
+                // () => {
+                //     app.stage.removeChildren();
+                //     app.stage.addChild(menu);
+                // },
             );
             app.stage.addChild(game);
     });
