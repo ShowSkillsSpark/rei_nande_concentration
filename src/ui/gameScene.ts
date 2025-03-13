@@ -20,36 +20,38 @@ class ExitPopup extends Popup {
                 fontFamily: 'JalnanOTF00',
                 fontSize: 100,
                 fill: 'white',
-                stroke: { color: 'black', width: 10, join: 'round' }
+                stroke: { color: 'black', width: 10, join: 'round' },
             }
         });
+        titleText.anchor.set(0.5);
         fitToParent(titleText, this.boxWidth * 0.8, this.boxHeight * 0.2);
-        titleText.x = this.left + (this.boxWidth - titleText.width) / 2;
-        titleText.y = this.boxHeight * 0.1;
+        titleText.x = this.boxWidth / 2;
+        titleText.y = this.boxHeight * 0.2;
 
         const yesButton = new FancyButton({
+            defaultView: new Text({
+                text: '인정합니다',
+                style: {
+                    fontFamily: 'ChosunGs',
+                    fontSize: 100,
+                    fill: 'black',
+                    fontWeight: 'bolder',
+                    stroke: { color: 'white', width: 10, join: 'round' },
+                },
+            }),
             animations: {
                 hover: {
                     props: {
                         scale: {x: 2, y: 2},
-                        x: this.boxWidth * 0.1,
                     },
-                    duration: 500,
+                    duration: 300,
                 }
             }
         });
-        yesButton.text = new Text({
-            text: '인정합니다',
-            style: {
-                fontFamily: 'ChosunGs',
-                fontSize: 100,
-                fill: 'white',
-                stroke: { color: 'black', width: 10, join: 'round' }
-            },
-        });
         fitToParent(yesButton, this.boxWidth * 0.4, this.boxHeight * 0.16);
+        yesButton.anchor.set(0.5);
         yesButton.x = this.boxWidth * 0.3;
-        yesButton.y = this.vertical_center;
+        yesButton.y = this.boxHeight * 0.6;
         yesButton.onclick = () => {
             // 소리: 자코인건 인정. 자코라서 미안해, 와라와라 등
             this.open = false;
@@ -61,28 +63,28 @@ class ExitPopup extends Popup {
         });
 
         const noButton = new FancyButton({
+            defaultView: new Text({
+                text: '겠냐에요;',
+                style: {
+                    fontFamily: 'GumiRomanceTTF',
+                    fontSize: 100,
+                    fill: 'black',
+                    stroke: { color: 'white', width: 10, join: 'round' },
+                }
+            }),
             animations: {
                 hover: {
                     props: {
                         scale: {x: 2, y: 2},
-                        x: -this.boxWidth * 0.1,
                     },
-                    duration: 500,
+                    duration: 300,
                 }
             }
         });
-        noButton.text = new Text({
-            text: '겠냐에요;',
-            style: {
-                fontFamily: 'JalnanOTF00',
-                fontSize: 100,
-                fill: 'white',
-                stroke: { color: 'black', width: 10, join: 'round' }
-            }
-        });
         fitToParent(noButton, this.boxWidth * 0.3, this.boxHeight * 0.15);
+        noButton.anchor.set(0.5);
         noButton.x = this.boxWidth * 0.7;
-        noButton.y = this.vertical_center;
+        noButton.y = this.boxHeight * 0.6;
         noButton.onclick = () => {
             // 소리: 겠냐에요, 화이팅, 응원해줘 등
             this.open = false;
@@ -106,15 +108,24 @@ class TopBar extends Container {
         super();
 
         // score
-        const navTitleButton = new FancyButton();
-        navTitleButton.text = new Text({
-            text: '타이틀로',
-            style: {
-                fontFamily: 'JalnanOTF00',
-                fontSize: 100,
-                fill: 'white',
-                stroke: { color: 'black', width: 10, join: 'round' }
-            }});
+        const navTitleButton = new FancyButton({
+            defaultView: new Text({
+                text: '타이틀로',
+                style: {
+                    fontFamily: 'Ownglyph StudyHard Rg',
+                    fontSize: 50,
+                    fill: 'black',
+                }}),
+            animations: {
+                hover: {
+                    props: {
+                        scale: {x: 0.9, y:0.9},
+                    },
+                    duration: 50,
+                },
+            }
+        });
+        navTitleButton.anchor.set(0.5);
         fitToParent(navTitleButton, width, height * 0.8);
         navTitleButton.x = x + width - navTitleButton.width;
         navTitleButton.y = y + height / 2;
@@ -133,9 +144,10 @@ interface GameSpaceParam {
     x: number, y: number, width: number, height: number,
     correctSoundNameList: string[],
     wrongSoundNameList: string[],
+    onClear: () => void,
 }
 class GameSpace extends Container {
-    constructor({x, y, width, height, correctSoundNameList, wrongSoundNameList}: GameSpaceParam) {
+    constructor({x, y, width, height, correctSoundNameList, wrongSoundNameList, onClear}: GameSpaceParam) {
         super();
 
         this.x = x;
@@ -174,7 +186,7 @@ class GameSpace extends Container {
                                         firstCard.setState(CardState.Correct);
                                         card.setState(CardState.Correct);
                                         correctCount += 2;
-                                        if (correctCount == store.cardCount ** 2) this.gameClear();
+                                        if (correctCount == store.cardCount ** 2) onClear();
                                         else sound.play(correctSoundNameList[Math.floor(Math.random() * correctSoundNameList.length)]);
                                     });
                                 } else { // 오답이면
@@ -196,12 +208,6 @@ class GameSpace extends Container {
             }
         }
     }
-
-    gameClear () {
-        console.log('game clear');
-        // 클리어 사운드
-        // 애니매이션
-    }
 }
 
 // UI
@@ -216,6 +222,7 @@ export class GameScene extends Scene {
     private _topBar: TopBar;
     private _gameSpace: GameSpace | null = null;
     private _exitPopup: ExitPopup;
+    private _navigator;
 
     private _correctSoundNameList;
     private _wrongSoundNameList;
@@ -225,6 +232,7 @@ export class GameScene extends Scene {
 
         this._correctSoundNameList = correctSoundNameList;
         this._wrongSoundNameList = wrongSoundNameList;
+        this._navigator = navigator;
 
         this._topBar = new TopBar({
             x: this.sceneX, y: this.sceneY,
@@ -259,6 +267,10 @@ export class GameScene extends Scene {
             width: size, height: size,
             correctSoundNameList: this._correctSoundNameList,
             wrongSoundNameList: this._wrongSoundNameList,
+            onClear: () => {
+                // 소리: 빰빠카빰
+                this._navigator.navScene(this._navigator.SCENE.CLEAR);
+            },
         });
 
         this.scene.addChild(this._gameSpace);

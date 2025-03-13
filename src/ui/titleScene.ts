@@ -15,15 +15,22 @@ class TitleButton extends FancyButton {
             hoverView: new Graphics()
                 .roundRect(0, 0, width, height, height * 0.3)
                 .fill(0x032740),
+            animations: {
+                hover: {
+                    props: {
+                        scale: {x: 1.1, y: 1.1},
+                    },
+                    duration: 50,
+                }
+            }
         });
 
-        this.x = x;
-        this.y = y;
+        this.x = x + width / 2;
+        this.y = y + height / 2;
+        this.anchor.set(0.5);
 
         const buttonText = new Text({text: text || ' ', style: { fontFamily: 'JalnanOTF00', fontSize: 100, fill: 'white' }});
         fitToParent(buttonText, this.width * 0.9, this.height * 0.9);
-        buttonText.x = this.x + (this.width - buttonText.width) / 2;
-        buttonText.y = this.y + (this.height - buttonText.height) / 2;
         this.text = buttonText;
     }
 }
@@ -72,14 +79,14 @@ class SizeButton extends TitleButton {
     }
 }
 
-// // (주)여기어때컴퍼니가 제공한 여기어때 잘난체가 적용되어 있습니다.
-// class CreditButton extends TitleButton {
-//     constructor(param: TitleButtonParam) {
-//         super({...param, text: '크레딧'});
+// (주)여기어때컴퍼니가 제공한 여기어때 잘난체가 적용되어 있습니다.
+class CreditButton extends TitleButton {
+    constructor(param: TitleButtonParam) {
+        super({...param, text: '크레딧'});
 
-//         this.onclick = () => {};
-//     }
-// }
+        this.onclick = () => {};
+    }
+}
 
 // UI
 // 10%
@@ -114,11 +121,12 @@ export class TitleScene extends Scene {
                 padding: 20,
             }
         });
+        title.anchor.set(0.5);
         const titleMaxWidth = this.scene.width * 0.95;
         const titleMaxHeight = this.scene.height * 0.2;
         fitToParent(title, titleMaxWidth, titleMaxHeight);
-        title.x = (this.scene.width - title.width) / 2;
-        title.y = this.scene.height * 0.1;
+        title.x = this.scene.width / 2;
+        title.y = this.scene.height * 0.2;
 
         const buttonWidht = this.width * 0.4;
         const buttonHeight = this.height * 0.1;
@@ -138,16 +146,16 @@ export class TitleScene extends Scene {
             y: this.height * 0.35 + (buttonHeight + buttonGap) * 2,
             width: buttonWidht, height: buttonHeight,
         });
-        // const creditButton = new CreditButton({
-        //     x: (this.width - buttonWidht) / 2,
-        //     y: this.height * 0.35 + (buttonHeight + buttonGap) * 3,
-        //     width: buttonWidht, height: buttonHeight,
-        // });
+        const creditButton = new CreditButton({
+            x: (this.width - buttonWidht) / 2,
+            y: this.height * 0.35 + (buttonHeight + buttonGap) * 3,
+            width: buttonWidht, height: buttonHeight,
+        });
 
         this.scene.addChild(title);
         this.scene.addChild(startButton);
         this.scene.addChild(voiceTypeButton);
         this.scene.addChild(sizeButton);
-        // this.scene.addChild(creditButton);
+        this.scene.addChild(creditButton);
     }
 }

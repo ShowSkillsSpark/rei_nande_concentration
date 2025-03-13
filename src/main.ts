@@ -4,6 +4,7 @@ import { TitleScene } from "./ui/titleScene";
 import { GameScene } from "./ui/gameScene";
 import { Navigator } from "./ui/navigator";
 import { sound } from "@pixi/sound";
+import { ClearScene } from "./ui/clearScene";
 
 (async () => {
     // Create a new application
@@ -75,6 +76,8 @@ import { sound } from "@pixi/sound";
     // font 불러오기
     await Assets.load('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff');
     await Assets.load('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ChosunGs.woff');
+    await Assets.load('https://fastly.jsdelivr.net/gh/projectnoonnu/2411-3@1.0/Ownglyph_StudyHard-Rg.woff2');
+    await Assets.load('https://fastly.jsdelivr.net/gh/projectnoonnu/2410-1@1.0/GumiRomanceTTF.woff2');
 
     // 화면 연결
     const navigator = new Navigator(app);
@@ -86,8 +89,13 @@ import { sound } from "@pixi/sound";
         navigator,
         sceneName: navigator.SCENE.GAME,
     });
+    new ClearScene({
+        navigator,
+        sceneName: navigator.SCENE.CLEAR,
+    })
 
     // 시작 화면
     navigator.navScene(navigator.SCENE.TITLE);
     // navigator.navScene(navigator.SCENE.GAME);
+    // navigator.navScene(navigator.SCENE.CLEAR);
 })();
