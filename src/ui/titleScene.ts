@@ -1,7 +1,7 @@
 import { Graphics, Text } from "pixi.js";
 import { FancyButton } from "@pixi/ui";
 import { fitToParent } from "../util";
-import { Scene } from "./scene";
+import { Scene, SceneParam } from "./scene";
 import { store } from "../store";
 
 interface CommonButtonParam { text?: string, x: number, y: number, width: number, height: number };
@@ -41,6 +41,7 @@ class StartButton extends CommonButton {
             const startAudio = startAudioList[Math.floor(Math.random() * startAudioList.length)];
             startAudio.onended = () => {
                 navGameScene();
+                this._clicked = false;
             };
             startAudio.play();
         };
@@ -90,9 +91,10 @@ class CreditButton extends CommonButton {
 // 10% sizeButton
 // 5%
 // 10% creditButton
+interface TitleSceneParam extends SceneParam { startAudioList: HTMLAudioElement[] };
 export class TitleScene extends Scene {
-    constructor({ startAudioList }: { startAudioList: HTMLAudioElement[] }, navGameScene: () => void) {
-        super();
+    constructor(param: TitleSceneParam) {
+        super(param);
 
         const title = new Text({
             text: '하나비라는 신경쇠약',
@@ -124,7 +126,7 @@ export class TitleScene extends Scene {
             x: (this.width - buttonWidht) / 2,
             y: this.height * 0.35 + (buttonHeight + buttonGap) * 0,
             width: buttonWidht, height: buttonHeight,
-        }, startAudioList, () => navGameScene());
+        }, param.startAudioList, () => param.navigator.navScene(param.navigator.SCENE.GAME));
         const voiceTypeButton = new VoiceTypeButton({
             x: (this.width - buttonWidht) / 2,
             y: this.height * 0.35 + (buttonHeight + buttonGap) * 1,

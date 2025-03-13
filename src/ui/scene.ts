@@ -1,10 +1,13 @@
 import { Container, Renderer, Sprite } from "pixi.js";
 import { fitToParent } from "../util";
+import { Navigator } from "./navigator";
 
+export interface SceneParam { navigator: Navigator, sceneName: string };
 export class Scene extends Container {
-    constructor () {
+    constructor ({ navigator, sceneName }: SceneParam) {
         super();
-        this.addChild(new Sprite({x: 0, y: 0, width: 1200, height: 900})); // 4:3
+        this.addChild(new Sprite({x: this.sceneX, y: this.sceneY, width: this.sceneWidth, height: this.sceneHeight})); // 16:9
+        navigator.addScene(sceneName, this);
     }
 
     _onRender = (renderer: Renderer) => { // responsive UI
@@ -14,6 +17,10 @@ export class Scene extends Container {
         this.y = (canvas.height - this.height) / 2;
     }
 
+    get sceneX () { return 0; }
+    get sceneY () { return 0; }
+    get sceneWidth () { return 1600; }
+    get sceneHeight () { return 900; }
     get left () { return this.x; }
     get horizontal_center () { return this.x + this.width / 2; }
     get right () { return this.x + this.width; }

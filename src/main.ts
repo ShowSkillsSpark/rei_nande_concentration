@@ -2,6 +2,7 @@ import { Assets, Application } from "pixi.js";
 import { assets } from "./assets";
 import { TitleScene } from "./ui/titleScene";
 import { GameScene } from "./ui/gameScene";
+import { Navigator } from "./ui/navigator";
 
 
 (async () => {
@@ -49,29 +50,16 @@ import { GameScene } from "./ui/gameScene";
         new Audio(assets.sound['zako'][3]),
     ]
 
-    // texture 불러오기
-    const cardTextures = {
-        ready: await Assets.load(assets.image.ready),
-        selected: await Assets.load(assets.image.selected),
-        correct: await Assets.load(assets.image.correct),
-        wrong: await Assets.load(assets.image.wrong),
-    }
-
     // 화면 연결
-    const menu = new TitleScene(
-        {startAudioList}, 
-        () => {
-            app.stage.removeChildren();
-            const game = new GameScene(
-                cardTextures, correctAudioList, wrongAudioList,
-                // () => {
-                //     app.stage.removeChildren();
-                //     app.stage.addChild(menu);
-                // },
-            );
-            app.stage.addChild(game);
+    const navigator = new Navigator(app);
+    new TitleScene({startAudioList, navigator, sceneName: navigator.SCENE.TITLE});
+    new GameScene({
+        correctAudioList,
+        wrongAudioList,
+        navigator,
+        sceneName: navigator.SCENE.GAME,
     });
 
     // 화면 보이기
-    app.stage.addChild(menu);
+    navigator.navScene(navigator.SCENE.TITLE);
 })();

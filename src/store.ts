@@ -1,7 +1,7 @@
 export const store = new class {
     // voice type
-    _availableVoiceTypeList: string[] = ['nande'];
-    _voiceTypeIndex = 0;
+    private _availableVoiceTypeList: string[] = ['nande'];
+    private _voiceTypeIndex = 0;
 
     get voiceType() { return this._availableVoiceTypeList[this._voiceTypeIndex]; }
     get voiceTypeString() {
@@ -15,8 +15,8 @@ export const store = new class {
     }
 
     // card count
-    _availableCardCountList: number[] = [2, 4];
-    _cardCountIndex = 0;
+    private _availableCardCountList: number[] = [2, 4];
+    private _cardCountIndex = 0;
 
     get cardCount() { return this._availableCardCountList[this._cardCountIndex]; }
     get cardCountString() {
