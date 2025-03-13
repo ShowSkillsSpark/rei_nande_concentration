@@ -9,13 +9,14 @@ import { Navigator } from "./navigator";
 import { sound } from "@pixi/sound";
 import { Popup, PopupParam } from "./popup";
 
-interface ExitPopupParam extends PopupParam { navigator: Navigator };
+interface ExitPopupParam extends PopupParam { looseSoundNameList: string[], navigator: Navigator };
 class ExitPopup extends Popup {
     constructor(param: ExitPopupParam) {
         super(param);
+        const { looseSoundNameList, navigator } = param;
 
         const titleText = new Text({
-            text: '당신은... 쟈코입니까?',
+            text: '당신은... 자코입니까?',
             style: {
                 fontFamily: 'JalnanOTF00',
                 fontSize: 100,
@@ -54,8 +55,10 @@ class ExitPopup extends Popup {
         yesButton.y = this.boxHeight * 0.6;
         yesButton.onclick = () => {
             // 소리: 자코인건 인정. 자코라서 미안해, 와라와라 등
-            this.open = false;
-            param.navigator.navScene(param.navigator.SCENE.TITLE);
+            sound.play(looseSoundNameList[Math.floor(Math.random() * looseSoundNameList.length)], () => {
+                this.open = false;
+                navigator.navScene(navigator.SCENE.TITLE);
+            });
         }
         yesButton.onHover.connect(() => {
             yesButton.zIndex = 1;
@@ -102,7 +105,10 @@ class ExitPopup extends Popup {
 
 // UI
 // score navTitle
-interface TopBarParam { x: number, y: number, width: number, height: number, onExitClicked: () => void};
+interface TopBarParam {
+    x: number, y: number, width: number, height: number,
+    onExitClicked: () => void
+};
 class TopBar extends Container {
     constructor({x, y, width, height, onExitClicked}: TopBarParam) {
         super();
@@ -129,7 +135,7 @@ class TopBar extends Container {
         fitToParent(navTitleButton, width, height * 0.8);
         navTitleButton.x = x + width - navTitleButton.width;
         navTitleButton.y = y + height / 2;
-        navTitleButton.onclick = () => onExitClicked(); // 정말로 포기하시겠습니까? 팝업 띄우기 navigator.navScene(navigator.SCENE.TITLE)
+        navTitleButton.onclick = () => onExitClicked();
 
         this.addChild(navTitleButton);
     }
@@ -217,6 +223,7 @@ interface GameSceneParam extends SceneParam {
     correctSoundNameList: string[],
     wrongSoundNameList: string[],
     giveupSoundNameList: string[],
+    looseSoundNameList: string[],
 };
 export class GameScene extends Scene {
     private _topBar: TopBar;
@@ -227,7 +234,7 @@ export class GameScene extends Scene {
     private _correctSoundNameList;
     private _wrongSoundNameList;
 
-    constructor({ correctSoundNameList, wrongSoundNameList, giveupSoundNameList, navigator, sceneName }: GameSceneParam) {
+    constructor({ correctSoundNameList, wrongSoundNameList, giveupSoundNameList, looseSoundNameList, navigator, sceneName }: GameSceneParam) {
         super({ navigator, sceneName });
 
         this._correctSoundNameList = correctSoundNameList;
@@ -240,7 +247,7 @@ export class GameScene extends Scene {
             onExitClicked: () => {
                 sound.play(giveupSoundNameList[Math.floor(Math.random() * giveupSoundNameList.length)]);
                 this._exitPopup.open = true;
-            }
+            },
         });
         const popupWidth = this.sceneWidth * 0.8;
         const popupHeight = this.sceneHeight * 0.8;
@@ -252,6 +259,7 @@ export class GameScene extends Scene {
             style: 0xFFFFFF,
             scene: this,
             navigator,
+            looseSoundNameList,
         });
 
         this.scene.addChild(this._topBar);

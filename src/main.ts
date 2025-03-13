@@ -19,59 +19,46 @@ import { ClearScene } from "./ui/clearScene";
 
     // sound 불러오기
     const startSoundNameList = [
-        assets.sound['konrei'][0],
-        assets.sound['konrei'][1],
-        assets.sound['hello'][0],
-        assets.sound['hello'][1],
-        assets.sound['hello'][2],
+        ...Object.values(assets.sound['konrei']),
+        ...Object.values(assets.sound['hello']),
     ].map((path, index) => {
         const name = `start-${index}`;
         sound.add(name, path);
         return name;
     });
     const correctSoundNameList = [
-        assets.sound['thx'][0],
-        assets.sound['thx'][1],
-        assets.sound['thx'][2],
-        assets.sound['thx'][3],
-        assets.sound['thx'][4],
-        assets.sound['yoshi'][0],
+        ...Object.values(assets.sound['thx']),
+        ...Object.values(assets.sound['yoshi']),
     ].map((path, index) => {
         const name = `correct-${index}`;
         sound.add(name, path);
         return name;
     });
     const wrongSoundNameList = [
-        assets.sound['haa'][0],
-        assets.sound['haa'][1],
-        assets.sound['hen'][0],
-        assets.sound['hen'][1],
-        assets.sound['hidoi'][0],
-        assets.sound['kora'][0],
-        assets.sound['kora'][1],
-        assets.sound['sorry'][0],
-        assets.sound['sorry'][1],
-        assets.sound['zako'][0],
-        assets.sound['zako'][1],
-        assets.sound['zako'][2],
-        assets.sound['zako'][3],
+        ...Object.values(assets.sound['haa']),
+        ...Object.values(assets.sound['hen']),
+        ...Object.values(assets.sound['hidoi']),
+        ...Object.values(assets.sound['kora']),
+        ...Object.values(assets.sound['sorry']),
     ].map((path, index) => {
         const name = `wrong-${index}`;
         sound.add(name, path);
         return name;
     });
     const giveupSoundNameList = [
-        assets.sound['hee'][0],
+        ...Object.values(assets.sound['hee']),
     ].map((path, index) => {
         const name = `giveup-${index}`;
         sound.add(name, path);
         return name;
     });
-    // const looseSoundNameList = [].map((path, index) => {
-    //     const name = `giveup-${index}`;
-    //     sound.add(name, path);
-    //     return name;
-    // });
+    const looseSoundNameList = [
+        ...Object.values(assets.sound['zako']),
+    ].map((path, index) => {
+        const name = `loose-${index}`;
+        sound.add(name, path);
+        return name;
+    });
 
     // font 불러오기
     await Assets.load('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff');
@@ -86,6 +73,7 @@ import { ClearScene } from "./ui/clearScene";
         correctSoundNameList,
         wrongSoundNameList,
         giveupSoundNameList,
+        looseSoundNameList,
         navigator,
         sceneName: navigator.SCENE.GAME,
     });
