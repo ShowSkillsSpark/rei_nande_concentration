@@ -43,7 +43,6 @@ import { sound } from "@pixi/sound";
     const wrongSoundNameList = [
         assets.sound['haa'][0],
         assets.sound['haa'][1],
-        assets.sound['hee'][0],
         assets.sound['hen'][0],
         assets.sound['hen'][1],
         assets.sound['hidoi'][0],
@@ -60,20 +59,35 @@ import { sound } from "@pixi/sound";
         sound.add(name, path);
         return name;
     });
+    const giveupSoundNameList = [
+        assets.sound['hee'][0],
+    ].map((path, index) => {
+        const name = `giveup-${index}`;
+        sound.add(name, path);
+        return name;
+    });
+    const looseSoundNameList = [].map((path, index) => {
+        const name = `giveup-${index}`;
+        sound.add(name, path);
+        return name;
+    });
 
     // font 불러오기
     await Assets.load('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff');
+    await Assets.load('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ChosunGs.woff');
 
     // 화면 연결
     const navigator = new Navigator(app);
     new TitleScene({startSoundNameList: startSoundNameList, navigator, sceneName: navigator.SCENE.TITLE});
     new GameScene({
-        correctSoundNameList: correctSoundNameList,
-        wrongSoundNameList: wrongSoundNameList,
+        correctSoundNameList,
+        wrongSoundNameList,
+        giveupSoundNameList,
         navigator,
         sceneName: navigator.SCENE.GAME,
     });
 
-    // 화면 보이기
+    // 시작 화면
     navigator.navScene(navigator.SCENE.TITLE);
+    // navigator.navScene(navigator.SCENE.GAME);
 })();
