@@ -9,6 +9,7 @@ export class Navigator {
     SCENE = {
         TITLE: 'title',
         GAME: 'game',
+        CLEAR: 'clear',
     };
 
     constructor(app: Application) {
