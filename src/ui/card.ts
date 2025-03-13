@@ -1,6 +1,5 @@
 import { Sprite, Texture, Assets } from "pixi.js";
 import { assets } from "../assets";
-import { store } from "../store";
 import { sound } from "@pixi/sound";
 
 export enum CardState {
@@ -10,24 +9,18 @@ export enum CardState {
     Wrong = 'wrong',
 }
 
-interface CardParam { x: number, y: number, width: number, height: number, cardIndex: number, readyTexture: Texture };
+interface CardParam { x: number, y: number, width: number, height: number, readyTexture: Texture, voiceName: string };
 export class Card extends Sprite {
-    private _cardIndex;
-
     private _state: CardState;
-    private _voiceId: number;
+    private _voiceName: string;
 
     constructor(
-        { x, y, width, height, cardIndex, readyTexture }: CardParam,
-        voiceId: number,
+        { x, y, width, height, readyTexture, voiceName }: CardParam,
     ) {
         super(readyTexture);
 
-        this._cardIndex = cardIndex;
-
         this._state = CardState.Ready;
-        this._voiceId = voiceId;
-        sound.add(`${this._cardIndex}`, assets.sound[store.voiceType][voiceId]);
+        this._voiceName = voiceName;
 
         const lesser = Math.min(width, height);
         const cardSize = lesser * 0.9;
@@ -39,33 +32,7 @@ export class Card extends Sprite {
         this.cursor = 'pointer';
     }
 
-    set state (state: CardState) {
-        this._state = state;
-        switch (state) {
-            case CardState.Ready:
-                Assets.load(assets.image.ready).then((texture) => this.texture = texture);
-                this.eventMode = 'static';
-                this.cursor = 'pointer';
-                break;
-            case CardState.Selected:
-                Assets.load(assets.image.selected).then((texture) => this.texture = texture);
-                this.eventMode = 'passive';
-                this.cursor = 'default';
-                break;
-            case CardState.Correct:
-                Assets.load(assets.image.correct).then((texture) => this.texture = texture);
-                this.eventMode = 'passive';
-                this.cursor = 'default';
-                break;
-            case CardState.Wrong:
-                Assets.load(assets.image.wrong).then((texture) => this.texture = texture);
-                this.eventMode = 'passive';
-                this.cursor = 'default';
-                break;
-        }
-    }
-
-    async setState(state: CardState) {
+    async setState(state: CardState, callback: () => void = () => {}) {
         this._state = state;
         switch (state) {
             case CardState.Ready:
@@ -75,6 +42,7 @@ export class Card extends Sprite {
                 break;
             case CardState.Selected:
                 this.texture = await Assets.load(assets.image.selected);
+                sound.play(this.voiceName, callback);
                 this.eventMode = 'passive';
                 this.cursor = 'default';
                 break;
@@ -91,15 +59,6 @@ export class Card extends Sprite {
         }
     }
 
-    get state () {
-        return this._state;
-    }
-
-    get voiceId() {
-        return this._voiceId;
-    }
-
-    playAudio(callback: () => void = () => {}) {
-        sound.play(`${this._cardIndex}`, callback);
-    }
+    get state () { return this._state; }
+    get voiceName() { return this._voiceName; }
 }

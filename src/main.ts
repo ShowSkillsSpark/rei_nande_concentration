@@ -1,9 +1,9 @@
-import { Assets, Application } from "pixi.js";
+import { Application, Assets } from "pixi.js";
 import { assets } from "./assets";
 import { TitleScene } from "./ui/titleScene";
 import { GameScene } from "./ui/gameScene";
 import { Navigator } from "./ui/navigator";
-
+import { sound } from "@pixi/sound";
 
 (async () => {
     // Create a new application
@@ -16,46 +16,60 @@ import { Navigator } from "./ui/navigator";
     document.getElementById("pixi-container")!.appendChild(app.canvas);
 
 
-    // 로딩
-    // audio 불러오기
-    const startAudioList = [
-        new Audio(assets.sound['konrei'][0]),
-        new Audio(assets.sound['konrei'][1]),
-        new Audio(assets.sound['hello'][0]),
-        new Audio(assets.sound['hello'][1]),
-        new Audio(assets.sound['hello'][2]),
-    ]
-    const correctAudioList = [
-        new Audio(assets.sound['thx'][0]),
-        new Audio(assets.sound['thx'][1]),
-        new Audio(assets.sound['thx'][2]),
-        new Audio(assets.sound['thx'][3]),
-        new Audio(assets.sound['thx'][4]),
-        new Audio(assets.sound['yoshi'][0]),
-    ]
-    const wrongAudioList = [
-        new Audio(assets.sound['haa'][0]),
-        new Audio(assets.sound['haa'][1]),
-        new Audio(assets.sound['hee'][0]),
-        new Audio(assets.sound['hen'][0]),
-        new Audio(assets.sound['hen'][1]),
-        new Audio(assets.sound['hidoi'][0]),
-        new Audio(assets.sound['kora'][0]),
-        new Audio(assets.sound['kora'][1]),
-        new Audio(assets.sound['sorry'][0]),
-        new Audio(assets.sound['sorry'][1]),
-        new Audio(assets.sound['zako'][0]),
-        new Audio(assets.sound['zako'][1]),
-        new Audio(assets.sound['zako'][2]),
-        new Audio(assets.sound['zako'][3]),
-    ]
+    // sound 불러오기
+    const startSoundNameList = [
+        assets.sound['konrei'][0],
+        assets.sound['konrei'][1],
+        assets.sound['hello'][0],
+        assets.sound['hello'][1],
+        assets.sound['hello'][2],
+    ].map((path, index) => {
+        const name = `start-${index}`;
+        sound.add(name, path);
+        return name;
+    });
+    const correctSoundNameList = [
+        assets.sound['thx'][0],
+        assets.sound['thx'][1],
+        assets.sound['thx'][2],
+        assets.sound['thx'][3],
+        assets.sound['thx'][4],
+        assets.sound['yoshi'][0],
+    ].map((path, index) => {
+        const name = `correct-${index}`;
+        sound.add(name, path);
+        return name;
+    });
+    const wrongSoundNameList = [
+        assets.sound['haa'][0],
+        assets.sound['haa'][1],
+        assets.sound['hee'][0],
+        assets.sound['hen'][0],
+        assets.sound['hen'][1],
+        assets.sound['hidoi'][0],
+        assets.sound['kora'][0],
+        assets.sound['kora'][1],
+        assets.sound['sorry'][0],
+        assets.sound['sorry'][1],
+        assets.sound['zako'][0],
+        assets.sound['zako'][1],
+        assets.sound['zako'][2],
+        assets.sound['zako'][3],
+    ].map((path, index) => {
+        const name = `wrong-${index}`;
+        sound.add(name, path);
+        return name;
+    });
+
+    // font 불러오기
+    await Assets.load('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff');
 
     // 화면 연결
     const navigator = new Navigator(app);
-    new TitleScene({startAudioList, navigator, sceneName: navigator.SCENE.TITLE});
+    new TitleScene({startSoundNameList: startSoundNameList, navigator, sceneName: navigator.SCENE.TITLE});
     new GameScene({
-        correctAudioList,
-        wrongAudioList,
+        correctSoundNameList: correctSoundNameList,
+        wrongSoundNameList: wrongSoundNameList,
         navigator,
         sceneName: navigator.SCENE.GAME,
     });

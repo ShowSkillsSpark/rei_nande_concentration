@@ -21,12 +21,12 @@ export class Scene extends Container {
     get sceneY () { return 0; }
     get sceneWidth () { return 1600; }
     get sceneHeight () { return 900; }
-    get left () { return this.x; }
-    get horizontal_center () { return this.x + this.width / 2; }
-    get right () { return this.x + this.width; }
-    get top () { return this.y; }
-    get vertical_center () { return this.y + this.height / 2; }
-    get bottom () { return this.y + this.height; }
+    get left () { return this.sceneX; }
+    get horizontal_center () { return this.sceneX + this.sceneWidth / 2; }
+    get right () { return this.sceneX + this.sceneWidth; }
+    get top () { return this.sceneY; }
+    get vertical_center () { return this.sceneY + this.sceneHeight / 2; }
+    get bottom () { return this.sceneY + this.sceneHeight; }
 
     onNavigated() {}
 }

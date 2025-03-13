@@ -3,6 +3,7 @@ import { FancyButton } from "@pixi/ui";
 import { fitToParent } from "../util";
 import { Scene, SceneParam } from "./scene";
 import { store } from "../store";
+import { sound } from "@pixi/sound";
 
 interface CommonButtonParam { text?: string, x: number, y: number, width: number, height: number };
 class CommonButton extends FancyButton {
@@ -18,7 +19,7 @@ class CommonButton extends FancyButton {
         this.x = x;
         this.y = y;
 
-        const buttonText = new Text({text: text || ' ', style: { fontFamily: 'yg-jalnan', fontSize: 100, fill: 'white' }});
+        const buttonText = new Text({text: text || ' ', style: { fontFamily: 'JalnanOTF00', fontSize: 100, fill: 'white' }});
         fitToParent(buttonText, this.width * 0.9, this.height * 0.9);
         buttonText.x = this.x + (this.width - buttonText.width) / 2;
         buttonText.y = this.y + (this.height - buttonText.height) / 2;
@@ -29,7 +30,7 @@ class CommonButton extends FancyButton {
 class StartButton extends CommonButton {
     _clicked = false;
 
-    constructor(param: CommonButtonParam, startAudioList: HTMLAudioElement[], navGameScene: () => void) {
+    constructor(param: CommonButtonParam, startSoundNameList: string[], navGameScene: () => void) {
         super({...param, text: '콘레이'});
 
         this.onclick = () => {
@@ -38,12 +39,11 @@ class StartButton extends CommonButton {
             this._clicked = true;
 
             // 무작위 게임 시작 음성 재생
-            const startAudio = startAudioList[Math.floor(Math.random() * startAudioList.length)];
-            startAudio.onended = () => {
+            const startSoundName = startSoundNameList[Math.floor(Math.random() * startSoundNameList.length)];
+            sound.play(startSoundName, () => {
                 navGameScene();
                 this._clicked = false;
-            };
-            startAudio.play();
+            });
         };
     }
 }
@@ -91,7 +91,7 @@ class CreditButton extends CommonButton {
 // 10% sizeButton
 // 5%
 // 10% creditButton
-interface TitleSceneParam extends SceneParam { startAudioList: HTMLAudioElement[] };
+interface TitleSceneParam extends SceneParam { startSoundNameList: string[] };
 export class TitleScene extends Scene {
     constructor(param: TitleSceneParam) {
         super(param);
@@ -99,7 +99,7 @@ export class TitleScene extends Scene {
         const title = new Text({
             text: '하나비라는 신경쇠약',
             style: {
-                fontFamily: 'yg-jalnan',
+                fontFamily: 'JalnanOTF00',
                 fontSize: 150,
                 fill: 'white',
                 stroke: { color: 'black', width: 4, join: 'round' },
@@ -126,7 +126,7 @@ export class TitleScene extends Scene {
             x: (this.width - buttonWidht) / 2,
             y: this.height * 0.35 + (buttonHeight + buttonGap) * 0,
             width: buttonWidht, height: buttonHeight,
-        }, param.startAudioList, () => param.navigator.navScene(param.navigator.SCENE.GAME));
+        }, param.startSoundNameList, () => param.navigator.navScene(param.navigator.SCENE.GAME));
         const voiceTypeButton = new VoiceTypeButton({
             x: (this.width - buttonWidht) / 2,
             y: this.height * 0.35 + (buttonHeight + buttonGap) * 1,
