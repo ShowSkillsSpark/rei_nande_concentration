@@ -27,4 +27,6 @@ export class Scene extends Container {
     get top () { return this.y; }
     get vertical_center () { return this.y + this.height / 2; }
     get bottom () { return this.y + this.height; }
+
+    onNavigated() {}
 }

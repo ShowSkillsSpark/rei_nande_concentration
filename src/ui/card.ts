@@ -1,6 +1,7 @@
 import { Sprite, Texture, Assets } from "pixi.js";
 import { assets } from "../assets";
 import { store } from "../store";
+import { sound } from "@pixi/sound";
 
 export enum CardState {
     Ready = 'ready',
@@ -11,9 +12,10 @@ export enum CardState {
 
 interface CardParam { x: number, y: number, width: number, height: number, cardIndex: number, readyTexture: Texture };
 export class Card extends Sprite {
-    _state: CardState;
-    _voiceId: number;
-    _audio: HTMLAudioElement;
+    private _cardIndex;
+
+    private _state: CardState;
+    private _voiceId: number;
 
     constructor(
         { x, y, width, height, cardIndex, readyTexture }: CardParam,
@@ -21,9 +23,11 @@ export class Card extends Sprite {
     ) {
         super(readyTexture);
 
+        this._cardIndex = cardIndex;
+
         this._state = CardState.Ready;
         this._voiceId = voiceId;
-        this._audio = new Audio(assets.sound[store.voiceType][voiceId]);
+        sound.add(`${this._cardIndex}`, assets.sound[store.voiceType][voiceId]);
 
         const lesser = Math.min(width, height);
         const cardSize = lesser * 0.9;
@@ -95,8 +99,7 @@ export class Card extends Sprite {
         return this._voiceId;
     }
 
-    playAudio(callback?: () => void) {
-        this._audio.onended = callback || null;
-        this._audio.play();
+    playAudio(callback: () => void = () => {}) {
+        sound.play(`${this._cardIndex}`, callback);
     }
 }

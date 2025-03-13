@@ -38,16 +38,17 @@ class TopBar extends Container {
 // 0 1 2 3
 // 4 5 6 7
 // 8 9 a b
+interface GameSpaceParam {
+    x: number, y: number, width: number, height: number,
+    correctAudioList: HTMLAudioElement[],
+    wrongAudioList: HTMLAudioElement[],
+}
 class GameSpace extends Container {
     _selectedCard: Card | null = null;
 
-    constructor(
-        x: number, y: number, width: number, height: number,
-        correctAudioList: HTMLAudioElement[], wrongAudioList: HTMLAudioElement[],
-    ) {
+    constructor({x, y, width, height, correctAudioList, wrongAudioList}: GameSpaceParam) {
         super();
 
-        // TODO: UI와 로직 분리 필요
         this.x = x;
         this.y = y;
 
@@ -76,7 +77,6 @@ class GameSpace extends Container {
         for (let i = 0; i < store.cardCount; i++) {
             for (let j = 0; j < store.cardCount; j++) {
                 Assets.load(assets.image.ready).then((readyTexture: Texture) => {
-                    console.log('loaded');
                     const card = new Card({
                         x: i * cardMaxWidth, y: j * cardMaxHeight, width: cardMaxWidth, height: cardMaxHeight,
                         cardIndex, readyTexture
@@ -144,12 +144,30 @@ interface GameSceneParam extends SceneParam {
     wrongAudioList: HTMLAudioElement[],
 };
 export class GameScene extends Scene {
+    private _topBar: TopBar;
+    private _gameSpace: GameSpace | null = null;
+
+    private _correctAudioList;
+    private _wrongAudioList;
+
     constructor({correctAudioList, wrongAudioList, navigator, sceneName }: GameSceneParam) {
         super({navigator, sceneName});
 
-        const topBar = new TopBar({ x: this.x, y: this.y, width: this.width, height: this.height * 0.1, navigator });
-        const gameSpace = new GameSpace(0, this.height * 0.1, this.width, this.height * 0.9, correctAudioList, wrongAudioList);
-        this.addChild(topBar);
-        this.addChild(gameSpace);
+        this._correctAudioList = correctAudioList;
+        this._wrongAudioList = wrongAudioList;
+
+        this._topBar = new TopBar({ x: this.sceneX, y: this.sceneY, width: this.sceneWidth, height: this.sceneHeight * 0.1, navigator });
+        this.addChild(this._topBar);
+    }
+
+    onNavigated() {
+        if (this._gameSpace) this.removeChild(this._gameSpace);
+        this._gameSpace = new GameSpace({
+            x: this.sceneX, y: this.sceneHeight * 0.1,
+            width: this.sceneWidth, height: this.sceneHeight * 0.9,
+            correctAudioList: this._correctAudioList,
+            wrongAudioList: this._wrongAudioList
+        });
+        this.addChild(this._gameSpace);
     }
 }

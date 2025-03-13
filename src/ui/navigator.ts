@@ -26,6 +26,7 @@ export class Navigator {
             this._currentScene.visible = false;
         }
         const nextScene = this._sceneMap[key]
+        nextScene.onNavigated();
         nextScene.visible = true;
         this._currentScene = nextScene;
     }
