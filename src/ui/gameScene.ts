@@ -1,4 +1,4 @@
-import { Container, Texture, Text, Assets, Graphics } from "pixi.js";
+import { Container, Texture, Text, Assets } from "pixi.js";
 import { assets } from "../assets";
 import { Card, CardState } from "./card";
 import { fitToParent } from "../util";

@@ -66,11 +66,11 @@ import { sound } from "@pixi/sound";
         sound.add(name, path);
         return name;
     });
-    const looseSoundNameList = [].map((path, index) => {
-        const name = `giveup-${index}`;
-        sound.add(name, path);
-        return name;
-    });
+    // const looseSoundNameList = [].map((path, index) => {
+    //     const name = `giveup-${index}`;
+    //     sound.add(name, path);
+    //     return name;
+    // });
 
     // font 불러오기
     await Assets.load('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff');

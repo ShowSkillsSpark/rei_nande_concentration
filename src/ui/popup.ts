@@ -1,6 +1,5 @@
-import { BlurFilter, Container, FillInput, Graphics, Text } from "pixi.js";
+import { BlurFilter, Container, FillInput, Graphics } from "pixi.js";
 import { Scene } from "./scene";
-import { FancyButton } from "@pixi/ui";
 
 export interface PopupParam { x: number, y: number, width: number, height: number, style: FillInput, scene: Scene };
 export class Popup extends Container {
