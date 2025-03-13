@@ -8,9 +8,8 @@ import { fitToParent } from "../util";
 // 설정1 설정2
 // 점수
 // 타이틀로 돌아가기
-interface ClearSceneParam extends SceneParam {};
 export class ClearScene extends Scene {
-    constructor(param: ClearSceneParam) {
+    constructor(param: SceneParam) {
         super(param);
 
         const clearText = new Text({

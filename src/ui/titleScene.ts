@@ -125,7 +125,7 @@ export class TitleScene extends Scene {
         const titleMaxWidth = this.scene.width * 0.95;
         const titleMaxHeight = this.scene.height * 0.2;
         fitToParent(title, titleMaxWidth, titleMaxHeight);
-        title.x = this.scene.width / 2;
+        title.x = this.horizontal_center;
         title.y = this.scene.height * 0.2;
 
         const buttonWidht = this.width * 0.4;
