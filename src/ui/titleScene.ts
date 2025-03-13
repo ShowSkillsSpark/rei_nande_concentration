@@ -89,20 +89,17 @@ class CreditButton extends TitleButton {
 }
 
 // UI
-// 10%
-// 20% title
-// 5%
-// 10% startButton
-// 5%
-// 10% voiceTypeButton
-// 5%
-// 10% sizeButton
-// 5%
-// 10% creditButton
+// title
+// startButton
+// voiceTypeButton
+// sizeButton
+// creditButton
 interface TitleSceneParam extends SceneParam { startSoundNameList: string[] };
 export class TitleScene extends Scene {
     constructor(param: TitleSceneParam) {
         super(param);
+
+        const { startSoundNameList, navigator } = param;
 
         const title = new Text({
             text: '하나비라는 신경쇠약',
@@ -135,7 +132,7 @@ export class TitleScene extends Scene {
             x: (this.width - buttonWidht) / 2,
             y: this.height * 0.35 + (buttonHeight + buttonGap) * 0,
             width: buttonWidht, height: buttonHeight,
-        }, param.startSoundNameList, () => param.navigator.navScene(param.navigator.SCENE.GAME));
+        }, startSoundNameList, () => navigator.navScene(navigator.SCENE.GAME));
         const voiceTypeButton = new VoiceTypeButton({
             x: (this.width - buttonWidht) / 2,
             y: this.height * 0.35 + (buttonHeight + buttonGap) * 1,

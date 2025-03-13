@@ -12,6 +12,8 @@ export class ClearScene extends Scene {
     constructor(param: SceneParam) {
         super(param);
 
+        const { navigator } = param;
+
         const clearText = new Text({
             text: '게임 클리어!',
             style: {
@@ -56,7 +58,7 @@ export class ClearScene extends Scene {
         backButton.x = this.horizontal_center;
         backButton.y = this.sceneHeight * 0.8;
         backButton.onclick = () => {
-            param.navigator.navScene(param.navigator.SCENE.TITLE);
+            navigator.navScene(navigator.SCENE.TITLE);
         }
 
         this.scene.addChild(clearText);
