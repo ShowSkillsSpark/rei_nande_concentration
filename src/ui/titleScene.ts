@@ -1,12 +1,13 @@
 import { Graphics, Text } from "pixi.js";
 import { FancyButton } from "@pixi/ui";
 import { fitToParent } from "../util";
-import { Scene } from "./scene";
+import { Scene, SceneParam } from "./scene";
 import { store } from "../store";
+import { sound } from "@pixi/sound";
 
-interface CommonButtonParam { text?: string, x: number, y: number, width: number, height: number };
-class CommonButton extends FancyButton {
-    constructor({ text, x, y, width, height}: CommonButtonParam) {
+interface TitleButtonParam { text?: string, x: number, y: number, width: number, height: number };
+class TitleButton extends FancyButton {
+    constructor({ text, x, y, width, height}: TitleButtonParam) {
         super({
             defaultView: new Graphics()
                 .roundRect(0, 0, width, height, height * 0.3)
@@ -15,10 +16,11 @@ class CommonButton extends FancyButton {
                 .roundRect(0, 0, width, height, height * 0.3)
                 .fill(0x032740),
         });
+
         this.x = x;
         this.y = y;
 
-        const buttonText = new Text({text: text || ' ', style: { fontFamily: 'yg-jalnan', fontSize: 100, fill: 'white' }});
+        const buttonText = new Text({text: text || ' ', style: { fontFamily: 'JalnanOTF00', fontSize: 100, fill: 'white' }});
         fitToParent(buttonText, this.width * 0.9, this.height * 0.9);
         buttonText.x = this.x + (this.width - buttonText.width) / 2;
         buttonText.y = this.y + (this.height - buttonText.height) / 2;
@@ -26,10 +28,10 @@ class CommonButton extends FancyButton {
     }
 }
 
-class StartButton extends CommonButton {
-    _clicked = false;
+class StartButton extends TitleButton {
+    private _clicked = false;
 
-    constructor(param: CommonButtonParam, startAudioList: HTMLAudioElement[], navGameScene: () => void) {
+    constructor(param: TitleButtonParam, startSoundNameList: string[], navGameScene: () => void) {
         super({...param, text: '콘레이'});
 
         this.onclick = () => {
@@ -38,17 +40,17 @@ class StartButton extends CommonButton {
             this._clicked = true;
 
             // 무작위 게임 시작 음성 재생
-            const startAudio = startAudioList[Math.floor(Math.random() * startAudioList.length)];
-            startAudio.onended = () => {
+            const startSoundName = startSoundNameList[Math.floor(Math.random() * startSoundNameList.length)];
+            sound.play(startSoundName, () => {
                 navGameScene();
-            };
-            startAudio.play();
+                this._clicked = false;
+            });
         };
     }
 }
 
-class VoiceTypeButton extends CommonButton {
-    constructor(param: CommonButtonParam) {
+class VoiceTypeButton extends TitleButton {
+    constructor(param: TitleButtonParam) {
         super({...param, text: store.voiceTypeString});
 
         this.onclick = () => {
@@ -59,8 +61,8 @@ class VoiceTypeButton extends CommonButton {
 
 }
 
-class SizeButton extends CommonButton {
-    constructor(param: CommonButtonParam) {
+class SizeButton extends TitleButton {
+    constructor(param: TitleButtonParam) {
         super({...param, text: store.cardCountString});
 
         this.onclick = () => {
@@ -70,14 +72,14 @@ class SizeButton extends CommonButton {
     }
 }
 
-// (주)여기어때컴퍼니가 제공한 여기어때 잘난체가 적용되어 있습니다.
-class CreditButton extends CommonButton {
-    constructor(param: CommonButtonParam) {
-        super({...param, text: '크레딧'});
+// // (주)여기어때컴퍼니가 제공한 여기어때 잘난체가 적용되어 있습니다.
+// class CreditButton extends TitleButton {
+//     constructor(param: TitleButtonParam) {
+//         super({...param, text: '크레딧'});
 
-        this.onclick = () => {};
-    }
-}
+//         this.onclick = () => {};
+//     }
+// }
 
 // UI
 // 10%
@@ -90,14 +92,15 @@ class CreditButton extends CommonButton {
 // 10% sizeButton
 // 5%
 // 10% creditButton
+interface TitleSceneParam extends SceneParam { startSoundNameList: string[] };
 export class TitleScene extends Scene {
-    constructor({ startAudioList }: { startAudioList: HTMLAudioElement[] }, navGameScene: () => void) {
-        super();
+    constructor(param: TitleSceneParam) {
+        super(param);
 
         const title = new Text({
             text: '하나비라는 신경쇠약',
             style: {
-                fontFamily: 'yg-jalnan',
+                fontFamily: 'JalnanOTF00',
                 fontSize: 150,
                 fill: 'white',
                 stroke: { color: 'black', width: 4, join: 'round' },
@@ -111,11 +114,11 @@ export class TitleScene extends Scene {
                 padding: 20,
             }
         });
-        const titleMaxWidth = this.width * 0.95;
-        const titleMaxHeight = this.height * 0.2;
+        const titleMaxWidth = this.scene.width * 0.95;
+        const titleMaxHeight = this.scene.height * 0.2;
         fitToParent(title, titleMaxWidth, titleMaxHeight);
-        title.x = (this.width - title.width) / 2;
-        title.y = this.height * 0.1;
+        title.x = (this.scene.width - title.width) / 2;
+        title.y = this.scene.height * 0.1;
 
         const buttonWidht = this.width * 0.4;
         const buttonHeight = this.height * 0.1;
@@ -124,7 +127,7 @@ export class TitleScene extends Scene {
             x: (this.width - buttonWidht) / 2,
             y: this.height * 0.35 + (buttonHeight + buttonGap) * 0,
             width: buttonWidht, height: buttonHeight,
-        }, startAudioList, () => navGameScene());
+        }, param.startSoundNameList, () => param.navigator.navScene(param.navigator.SCENE.GAME));
         const voiceTypeButton = new VoiceTypeButton({
             x: (this.width - buttonWidht) / 2,
             y: this.height * 0.35 + (buttonHeight + buttonGap) * 1,
@@ -135,16 +138,16 @@ export class TitleScene extends Scene {
             y: this.height * 0.35 + (buttonHeight + buttonGap) * 2,
             width: buttonWidht, height: buttonHeight,
         });
-        const creditButton = new CreditButton({
-            x: (this.width - buttonWidht) / 2,
-            y: this.height * 0.35 + (buttonHeight + buttonGap) * 3,
-            width: buttonWidht, height: buttonHeight,
-        });
+        // const creditButton = new CreditButton({
+        //     x: (this.width - buttonWidht) / 2,
+        //     y: this.height * 0.35 + (buttonHeight + buttonGap) * 3,
+        //     width: buttonWidht, height: buttonHeight,
+        // });
 
-        this.addChild(title);
-        this.addChild(startButton);
-        this.addChild(voiceTypeButton);
-        this.addChild(sizeButton);
-        this.addChild(creditButton);
+        this.scene.addChild(title);
+        this.scene.addChild(startButton);
+        this.scene.addChild(voiceTypeButton);
+        this.scene.addChild(sizeButton);
+        // this.scene.addChild(creditButton);
     }
 }
