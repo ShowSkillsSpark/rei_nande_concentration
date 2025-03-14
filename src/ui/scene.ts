@@ -3,7 +3,7 @@ import { fitToParent } from "../util";
 import { Navigator } from "./navigator";
 
 export interface SceneParam { navigator: Navigator, sceneName: string };
-export class Scene extends Container {
+export abstract class Scene extends Container {
     private _scene;
 
     constructor({ navigator, sceneName }: SceneParam) {
@@ -40,5 +40,5 @@ export class Scene extends Container {
     get vertical_center() { return this.sceneY + this.sceneHeight / 2; }
     get bottom() { return this.sceneY + this.sceneHeight; }
 
-    onNavigated() {}
+    abstract onNavigated: (navigator: Navigator) => void;
 }

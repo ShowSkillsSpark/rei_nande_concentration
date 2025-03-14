@@ -5,6 +5,7 @@ import { GameScene } from "./ui/gameScene";
 import { Navigator } from "./ui/navigator";
 import { sound } from "@pixi/sound";
 import { ClearScene } from "./ui/clearScene";
+import { HanabiraOverlay } from "./ui/hanabiraOverlay";
 
 (async () => {
     // Create a new application
@@ -65,10 +66,15 @@ import { ClearScene } from "./ui/clearScene";
     await Assets.load('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ChosunGs.woff');
     await Assets.load('https://fastly.jsdelivr.net/gh/projectnoonnu/2411-3@1.0/Ownglyph_StudyHard-Rg.woff2');
     await Assets.load('https://fastly.jsdelivr.net/gh/projectnoonnu/2410-1@1.0/GumiRomanceTTF.woff2');
+    await Assets.load('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2402_keris@1.0/TTHakgyoansimNamuL.woff2');
 
     // 화면 연결
     const navigator = new Navigator(app);
-    new TitleScene({startSoundNameList: startSoundNameList, navigator, sceneName: navigator.SCENE.TITLE});
+    new TitleScene({
+        startSoundNameList: startSoundNameList,
+        navigator,
+        sceneName: navigator.SCENE.TITLE,
+    });
     new GameScene({
         correctSoundNameList,
         wrongSoundNameList,
@@ -81,6 +87,7 @@ import { ClearScene } from "./ui/clearScene";
         navigator,
         sceneName: navigator.SCENE.CLEAR,
     })
+    navigator.addOverlay(navigator.OVERLAY.HANABIRA, new HanabiraOverlay({app}));
 
     // 시작 화면
     navigator.navScene(navigator.SCENE.TITLE);

@@ -113,7 +113,22 @@ class TopBar extends Container {
     constructor({x, y, width, height, onExitClicked}: TopBarParam) {
         super();
 
-        // score
+        const timerText = new Text({
+            text: store.elapsedTime,
+            style: {
+                fontFamily: 'Ownglyph StudyHard Rg',
+                fontSize: 50,
+                fill: 'black',
+            }
+        });
+        timerText.anchor.set(0.5);
+        fitToParent(timerText, width, height * 0.8);
+        timerText.x = x + width / 2;
+        timerText.y = y + height / 2;
+        store.onTimerUpdate = () => {
+            timerText.text = store.elapsedTime;
+        }
+
         const navTitleButton = new FancyButton({
             defaultView: new Text({
                 text: '타이틀로',
@@ -137,6 +152,7 @@ class TopBar extends Container {
         navTitleButton.y = y + height / 2;
         navTitleButton.on('pointerdown', () => onExitClicked());
 
+        this.addChild(timerText);
         this.addChild(navTitleButton);
     }
 }
@@ -164,11 +180,13 @@ class GameSpace extends Container {
         console.log(voiceIdList);
 
         let correctCount = 0;
+        let selectCount = 0;
 
         const cardMaxWidth = width / store.cardCount;
         const cardMaxHeight = height / store.cardCount;
         // 카드 생성
         let selectedCard: Card | null = null;
+        const cardList: Card[] = [];
         for (let i = 0; i < store.cardCount; i++) {
             for (let j = 0; j < store.cardCount; j++) {
                 Assets.load(assets.image.ready).then((readyTexture: Texture) => {
@@ -176,25 +194,37 @@ class GameSpace extends Container {
                         x: i * cardMaxWidth, y: j * cardMaxHeight, width: cardMaxWidth, height: cardMaxHeight,
                         readyTexture, voiceName: `${store.voiceType}-${voiceIdList[j * store.cardCount + i]}`
                     });
+                    cardList.push(card);
                     card.on("pointerdown", () => {
                         if (card.state === CardState.Ready) {
                             if (selectedCard === null) { // 선택된 카드가 없다면
+                                if (selectCount == 0) { // 게임 시작 시점
+                                    store.startTimer();
+                                }
                                 console.log('select 1st', card.voiceName);
                                 selectedCard = card;
                                 card.setState(CardState.Selected);
                             } else if (selectedCard !== card) { // 다른 카드가 선택되면
+                                selectCount++;
                                 console.log('select 2nd', card.voiceName);
                                 const firstCard = selectedCard;
                                 selectedCard = null;
                                 if (firstCard.voiceName === card.voiceName) { // 정답이면
                                     console.log('correct');
-                                    card.setState(CardState.Selected, () => {
-                                        firstCard.setState(CardState.Correct);
-                                        card.setState(CardState.Correct);
-                                        correctCount += 2;
-                                        if (correctCount == store.cardCount ** 2) onClear();
-                                        else sound.play(correctSoundNameList[Math.floor(Math.random() * correctSoundNameList.length)]);
-                                    });
+                                    correctCount += 2;
+                                    if (correctCount < store.cardCount ** 2) { // 1쌍 맞춤
+                                        card.setState(CardState.Selected, () => {
+                                            firstCard.setState(CardState.Correct);
+                                            card.setState(CardState.Correct);
+                                            sound.play(correctSoundNameList[Math.floor(Math.random() * correctSoundNameList.length)]);
+                                        });
+                                    } else { // 게임 클리어
+                                        store.stopTimer();
+                                        cardList.forEach((card) => {
+                                            card.setState(CardState.Finish);
+                                        });
+                                        card.playSound(() => onClear());
+                                    }
                                 } else { // 오답이면
                                     console.log('wrong');
                                     card.setState(CardState.Selected, () => {
@@ -266,7 +296,7 @@ export class GameScene extends Scene {
         this.addChild(this._exitPopup);
     }
 
-    onNavigated() {
+    onNavigated = () => {
         if (this._gameSpace) this.scene.removeChild(this._gameSpace);
 
         const size = Math.min(this.sceneWidth, this.sceneHeight * 0.9);

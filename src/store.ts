@@ -1,6 +1,7 @@
 import { sound } from "@pixi/sound";
 import { assets } from "./assets";
 import { shuffle } from "./util";
+import { Ticker } from "pixi.js";
 
 export const store = new class {
     // voice type
@@ -48,5 +49,40 @@ export const store = new class {
         // 초기화
         this._voiceIdList = voiceIdList;
         return this._voiceIdList;
+    }
+
+    // timer
+    private _startDate: Date | null = null;
+    private _endDate = new Date();
+    private _stopTimer = false;
+    private _ticker?: Ticker;
+
+    onTimerUpdate?: () => void;
+    resetTimer() {
+        this._startDate = null;
+        this._endDate = new Date();
+        this._stopTimer = false;
+        if (!this._ticker) {
+            this._ticker = new Ticker();
+            this._ticker.add(() => {
+                this._endDate = new Date();
+                this.onTimerUpdate?.();
+            });
+        }
+        this.onTimerUpdate?.();
+    }
+    startTimer() {
+        this._startDate = this._endDate = new Date();
+        this._ticker?.start();
+    }
+    stopTimer() {
+        this._stopTimer = true;
+        this._ticker?.stop();
+    }
+    get elapsedTime() {
+        const postfix = ' 초';
+        if (this._startDate == null) return (0).toFixed(1) + postfix;
+        if (!this._stopTimer) this._endDate = new Date();
+        return ((this._endDate.getTime() - this._startDate.getTime()) / 1000).toFixed(1) + postfix;
     }
 }();

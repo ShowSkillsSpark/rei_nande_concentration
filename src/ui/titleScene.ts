@@ -18,7 +18,7 @@ class TitleButton extends FancyButton {
             animations: {
                 hover: {
                     props: {
-                        scale: {x: 1.1, y: 1.1},
+                        scale: {x: 1.2, y: 1.2},
                     },
                     duration: 50,
                 }
@@ -125,27 +125,27 @@ export class TitleScene extends Scene {
         title.x = this.horizontal_center;
         title.y = this.scene.height * 0.2;
 
-        const buttonWidht = this.width * 0.4;
-        const buttonHeight = this.height * 0.1;
-        const buttonGap = this.height * 0.05;
+        const buttonWidht = this.scene.width * 0.4;
+        const buttonHeight = this.scene.height * 0.1;
+        const buttonGap = this.scene.height * 0.05;
         const startButton = new StartButton({
-            x: (this.width - buttonWidht) / 2,
-            y: this.height * 0.35 + (buttonHeight + buttonGap) * 0,
+            x: (this.scene.width - buttonWidht) / 2,
+            y: this.scene.height * 0.35 + (buttonHeight + buttonGap) * 0,
             width: buttonWidht, height: buttonHeight,
         }, startSoundNameList, () => navigator.navScene(navigator.SCENE.GAME));
         const voiceTypeButton = new VoiceTypeButton({
-            x: (this.width - buttonWidht) / 2,
-            y: this.height * 0.35 + (buttonHeight + buttonGap) * 1,
+            x: (this.scene.width - buttonWidht) / 2,
+            y: this.scene.height * 0.35 + (buttonHeight + buttonGap) * 1,
             width: buttonWidht, height: buttonHeight,
         });
         const sizeButton = new SizeButton({
-            x: (this.width - buttonWidht) / 2,
-            y: this.height * 0.35 + (buttonHeight + buttonGap) * 2,
+            x: (this.scene.width - buttonWidht) / 2,
+            y: this.scene.height * 0.35 + (buttonHeight + buttonGap) * 2,
             width: buttonWidht, height: buttonHeight,
         });
         const creditButton = new CreditButton({
-            x: (this.width - buttonWidht) / 2,
-            y: this.height * 0.35 + (buttonHeight + buttonGap) * 3,
+            x: (this.scene.width - buttonWidht) / 2,
+            y: this.scene.height * 0.35 + (buttonHeight + buttonGap) * 3,
             width: buttonWidht, height: buttonHeight,
         });
 
@@ -154,5 +154,10 @@ export class TitleScene extends Scene {
         this.scene.addChild(voiceTypeButton);
         this.scene.addChild(sizeButton);
         this.scene.addChild(creditButton);
+
+    }
+
+    onNavigated = (): void => {
+        store.resetTimer();
     }
 }
