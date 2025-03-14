@@ -1,4 +1,4 @@
-import { Container, Text, Ticker } from "pixi.js";
+import { Text, Ticker } from "pixi.js";
 import { FancyButton } from "@pixi/ui";
 import { Scene, SceneParam } from "./scene";
 import { fitToParent } from "../util";
