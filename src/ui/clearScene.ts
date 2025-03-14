@@ -2,6 +2,7 @@ import { Text } from "pixi.js";
 import { FancyButton } from "@pixi/ui";
 import { Scene, SceneParam } from "./scene";
 import { fitToParent } from "../util";
+import { store } from "../store";
 
 // UI
 // 게임 클리어!
@@ -9,6 +10,7 @@ import { fitToParent } from "../util";
 // 점수
 // 타이틀로 돌아가기
 export class ClearScene extends Scene {
+    private _timerText;
     constructor(param: SceneParam) {
         super(param);
 
@@ -25,6 +27,30 @@ export class ClearScene extends Scene {
         fitToParent(clearText, this.sceneWidth * 0.6, this.sceneHeight * 0.2);
         clearText.x = this.horizontal_center;
         clearText.y = this.sceneY + this.sceneHeight * 0.2;
+
+        const levelText = new Text({
+            text: store.voiceTypeString + ' ' + store.cardCountString,
+            style: {
+                fontFamily: 'TTHakgyoansimNamuL',
+                fontSize: 100,
+            }
+        });
+        levelText.anchor.set(0.5);
+        fitToParent(levelText, this.sceneWidth * 0.9, this.sceneHeight * 0.1);
+        levelText.x = this.horizontal_center;
+        levelText.y = this.sceneHeight * 0.45;
+
+        this._timerText = new Text({
+            text: store.elapsedTime,
+            style: {
+                fontFamily: 'TTHakgyoansimNamuL',
+                fontSize: 150,
+            }
+        });
+        this._timerText.anchor.set(0.5);
+        fitToParent(this._timerText, this.sceneWidth * 0.9, this.sceneHeight * 0.15);
+        this._timerText.x = this.horizontal_center;
+        this._timerText.y = this.sceneHeight * 0.55;
 
         const backButtonDefaultView = new Text({
             text: '타이틀로 돌아가기',
@@ -62,10 +88,13 @@ export class ClearScene extends Scene {
         });
 
         this.scene.addChild(clearText);
+        this.scene.addChild(levelText);
+        this.scene.addChild(this._timerText);
         this.scene.addChild(backButton);
     }
 
     onNavigated(): void {
+        this._timerText.text = store.elapsedTime;
         // 소리: 빰빠카빰, 하나비라 다이스키, 결혼해줄래? 등
     }
 }

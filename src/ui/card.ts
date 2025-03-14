@@ -7,6 +7,7 @@ export enum CardState {
     Selected = 'selected',
     Correct = 'correct',
     Wrong = 'wrong',
+    Finish = 'finish',
 }
 
 interface CardParam { x: number, y: number, width: number, height: number, readyTexture: Texture, voiceName: string };
@@ -33,6 +34,7 @@ export class Card extends Sprite {
     }
 
     async setState(state: CardState, callback: () => void = () => {}) {
+        if (this._state == CardState.Finish) return;
         this._state = state;
         switch (state) {
             case CardState.Ready:
@@ -56,7 +58,16 @@ export class Card extends Sprite {
                 this.eventMode = 'passive';
                 this.cursor = 'default';
                 break;
+            case CardState.Finish:
+                this.texture = await Assets.load(assets.image.finish);
+                this.eventMode = 'passive';
+                this.cursor = 'default';
+                break;
         }
+    }
+
+    async playSound(callback: () => void = () => {}) {
+        sound.play(this.voiceName, callback);
     }
 
     get state () { return this._state; }
