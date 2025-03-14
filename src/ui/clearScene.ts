@@ -57,9 +57,9 @@ export class ClearScene extends Scene {
         fitToParent(backButton, this.sceneWidth, this.sceneHeight * 0.1);
         backButton.x = this.horizontal_center;
         backButton.y = this.sceneHeight * 0.8;
-        backButton.onclick = () => {
+        backButton.on('pointerdown', () => {
             navigator.navScene(navigator.SCENE.TITLE);
-        }
+        });
 
         this.scene.addChild(clearText);
         this.scene.addChild(backButton);

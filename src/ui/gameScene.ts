@@ -53,14 +53,14 @@ class ExitPopup extends Popup {
         yesButton.anchor.set(0.5);
         yesButton.x = this.boxWidth * 0.3;
         yesButton.y = this.boxHeight * 0.6;
-        yesButton.onclick = () => {
+        yesButton.on('pointerdown', () => {
             // 소리: 자코인건 인정. 자코라서 미안해, 와라와라 등
             sound.play(looseSoundNameList[Math.floor(Math.random() * looseSoundNameList.length)], () => {
                 this.open = false;
                 navigator.navScene(navigator.SCENE.TITLE);
             });
-        }
-        yesButton.onHover.connect(() => {
+        });
+        yesButton.on('pointerover', () => {
             yesButton.zIndex = 1;
             noButton.zIndex = 0;
         });
@@ -88,11 +88,11 @@ class ExitPopup extends Popup {
         noButton.anchor.set(0.5);
         noButton.x = this.boxWidth * 0.7;
         noButton.y = this.boxHeight * 0.6;
-        noButton.onclick = () => {
+        noButton.on('pointerdown', () => {
             // 소리: 겠냐에요, 화이팅, 응원해줘 등
             this.open = false;
-        }
-        noButton.onHover.connect(() => {
+        });
+        noButton.on('pointerenter', () => {
             yesButton.zIndex = 0;
             noButton.zIndex = 1;
         });
@@ -135,7 +135,7 @@ class TopBar extends Container {
         fitToParent(navTitleButton, width, height * 0.8);
         navTitleButton.x = x + width - navTitleButton.width;
         navTitleButton.y = y + height / 2;
-        navTitleButton.onclick = () => onExitClicked();
+        navTitleButton.on('pointerdown', () => onExitClicked());
 
         this.addChild(navTitleButton);
     }

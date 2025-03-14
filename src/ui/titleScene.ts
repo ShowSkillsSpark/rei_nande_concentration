@@ -41,7 +41,7 @@ class StartButton extends TitleButton {
     constructor(param: TitleButtonParam, startSoundNameList: string[], navGameScene: () => void) {
         super({...param, text: '콘레이'});
 
-        this.onclick = () => {
+        this.on('pointerdown', () => {
             // 여러번 클릭 방지
             if (this._clicked) return;
             this._clicked = true;
@@ -52,7 +52,7 @@ class StartButton extends TitleButton {
                 navGameScene();
                 this._clicked = false;
             });
-        };
+        });
     }
 }
 
@@ -60,10 +60,10 @@ class VoiceTypeButton extends TitleButton {
     constructor(param: TitleButtonParam) {
         super({...param, text: store.voiceTypeString});
 
-        this.onclick = () => {
+        this.on('pointerdown', () => {
             store.nextVoiceType();
             this.text = store.voiceTypeString;
-        };
+        });
     }
 
 }
@@ -72,10 +72,10 @@ class SizeButton extends TitleButton {
     constructor(param: TitleButtonParam) {
         super({...param, text: store.cardCountString});
 
-        this.onclick = () => {
+        this.on('pointerdown', () => {
             store.nextCardCount();
             this.text = store.cardCountString;
-        };
+        });
     }
 }
 
@@ -84,7 +84,7 @@ class CreditButton extends TitleButton {
     constructor(param: TitleButtonParam) {
         super({...param, text: '크레딧'});
 
-        this.onclick = () => {};
+        this.on('pointerdown', () => {});
     }
 }
 
