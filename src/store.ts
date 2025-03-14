@@ -80,7 +80,4 @@ export const store = new class {
         if (!this._stopTimer) this._endDate = new Date();
         return ((this._endDate!!.getTime() - this._startDate.getTime()) / 1000).toFixed(1) + postfix;
     }
-
-    // moves
-    selectCount = 0;
 }();

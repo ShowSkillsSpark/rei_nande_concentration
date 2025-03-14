@@ -1,10 +1,11 @@
-import { Application, Assets } from "pixi.js";
+import { Application, Assets, Container } from "pixi.js";
 import { assets } from "./assets";
 import { TitleScene } from "./ui/titleScene";
 import { GameScene } from "./ui/gameScene";
 import { Navigator } from "./ui/navigator";
 import { sound } from "@pixi/sound";
 import { ClearScene } from "./ui/clearScene";
+import { HanabiraOverlay } from "./ui/hanabiraOverlay";
 
 (async () => {
     // Create a new application
@@ -69,7 +70,11 @@ import { ClearScene } from "./ui/clearScene";
 
     // 화면 연결
     const navigator = new Navigator(app);
-    new TitleScene({startSoundNameList: startSoundNameList, navigator, sceneName: navigator.SCENE.TITLE});
+    new TitleScene({
+        startSoundNameList: startSoundNameList,
+        navigator,
+        sceneName: navigator.SCENE.TITLE,
+    });
     new GameScene({
         correctSoundNameList,
         wrongSoundNameList,
@@ -82,6 +87,7 @@ import { ClearScene } from "./ui/clearScene";
         navigator,
         sceneName: navigator.SCENE.CLEAR,
     })
+    navigator.addOverlay(navigator.OVERLAY.HANABIRA, new HanabiraOverlay({app}));
 
     // 시작 화면
     navigator.navScene(navigator.SCENE.TITLE);

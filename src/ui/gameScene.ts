@@ -296,7 +296,7 @@ export class GameScene extends Scene {
         this.addChild(this._exitPopup);
     }
 
-    onNavigated() {
+    onNavigated = () => {
         if (this._gameSpace) this.scene.removeChild(this._gameSpace);
 
         const size = Math.min(this.sceneWidth, this.sceneHeight * 0.9);

@@ -3,6 +3,8 @@ import { FancyButton } from "@pixi/ui";
 import { Scene, SceneParam } from "./scene";
 import { fitToParent } from "../util";
 import { store } from "../store";
+import { Navigator } from "./navigator";
+import { HanabiraOverlay } from "./hanabiraOverlay";
 
 // UI
 // 게임 클리어!
@@ -93,8 +95,9 @@ export class ClearScene extends Scene {
         this.scene.addChild(backButton);
     }
 
-    onNavigated(): void {
+    onNavigated = (navigator: Navigator) => {
         this._timerText.text = store.elapsedTime;
         // 소리: 빰빠카빰, 하나비라 다이스키, 결혼해줄래? 등
+        (navigator.getOverlay(navigator.OVERLAY.HANABIRA) as HanabiraOverlay).start();
     }
 }
