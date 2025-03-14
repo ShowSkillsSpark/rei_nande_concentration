@@ -3,7 +3,6 @@ import { FancyButton } from "@pixi/ui";
 import { fitToParent } from "../util";
 import { Scene, SceneParam } from "./scene";
 import { store } from "../store";
-import { Navigator } from "./navigator";
 import { sound } from "@pixi/sound";
 
 interface TitleButtonParam { text?: string, x: number, y: number, width: number, height: number };
@@ -19,7 +18,7 @@ class TitleButton extends FancyButton {
             animations: {
                 hover: {
                     props: {
-                        scale: {x: 1.1, y: 1.1},
+                        scale: {x: 1.2, y: 1.2},
                     },
                     duration: 50,
                 }

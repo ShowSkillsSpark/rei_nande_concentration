@@ -1,4 +1,4 @@
-import { Text } from "pixi.js";
+import { Container, Text, Ticker } from "pixi.js";
 import { FancyButton } from "@pixi/ui";
 import { Scene, SceneParam } from "./scene";
 import { fitToParent } from "../util";
@@ -78,7 +78,7 @@ export class ClearScene extends Scene {
                         scale: { x: 1.1, y: 1.1 },
                     },
                     duration: 100,
-                }
+                },
             }
         });
         backButton.anchor.set(0.5);
@@ -89,10 +89,18 @@ export class ClearScene extends Scene {
             navigator.navScene(navigator.SCENE.TITLE);
         });
 
-        this.scene.addChild(clearText);
-        this.scene.addChild(levelText);
-        this.scene.addChild(this._timerText);
-        this.scene.addChild(backButton);
+        this.scene.addChild(clearText, levelText, this._timerText, backButton);
+
+        let t = 0;
+        const defaultLevelTextWidth = levelText.width;
+        const defaultTimerTextWidth = this._timerText.width;
+        const scoreTicker = new Ticker();
+        scoreTicker.add(() => {
+            t += 0.1;
+            levelText.width = (1 + Math.sin(t) * 0.05) * defaultLevelTextWidth;
+            this._timerText.width = (1 + Math.sin(t) * 0.05) * defaultTimerTextWidth;
+        });
+        scoreTicker.start();
     }
 
     onNavigated = (navigator: Navigator) => {

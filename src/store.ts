@@ -53,31 +53,36 @@ export const store = new class {
 
     // timer
     private _startDate: Date | null = null;
-    private _endDate: Date | null = null;
+    private _endDate = new Date();
     private _stopTimer = false;
+    private _ticker?: Ticker;
 
     onTimerUpdate?: () => void;
-    private _updateTimer = () => {
-        this._endDate = new Date();
-        this.onTimerUpdate?.();
-    }
     resetTimer() {
         this._startDate = null;
-        this._endDate = null;
+        this._endDate = new Date();
         this._stopTimer = false;
+        if (!this._ticker) {
+            this._ticker = new Ticker();
+            this._ticker.add(() => {
+                this._endDate = new Date();
+                this.onTimerUpdate?.();
+            });
+        }
+        this.onTimerUpdate?.();
     }
     startTimer() {
         this._startDate = this._endDate = new Date();
-        Ticker.shared.add(this._updateTimer);
+        this._ticker?.start();
     }
     stopTimer() {
         this._stopTimer = true;
-        Ticker.shared.remove(this._updateTimer);
+        this._ticker?.stop();
     }
     get elapsedTime() {
         const postfix = ' 초';
         if (this._startDate == null) return (0).toFixed(1) + postfix;
         if (!this._stopTimer) this._endDate = new Date();
-        return ((this._endDate!!.getTime() - this._startDate.getTime()) / 1000).toFixed(1) + postfix;
+        return ((this._endDate.getTime() - this._startDate.getTime()) / 1000).toFixed(1) + postfix;
     }
 }();
