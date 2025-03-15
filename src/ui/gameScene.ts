@@ -113,6 +113,36 @@ class TopBar extends Container {
     constructor({x, y, width, height, onExitClicked}: TopBarParam) {
         super();
 
+        const navTitleButton = new FancyButton({
+            defaultView: new Text({
+                text: '타이틀로 돌아가기',
+                style: {
+                    fontFamily: 'Ownglyph StudyHard Rg',
+                    fontSize: 50,
+                    fill: 'black',
+                }}),
+            hoverView: new Text({
+                text: '타이틀로 돌아가기',
+                style: {
+                    fontFamily: 'Ownglyph StudyHard Rg',
+                    fontSize: 50,
+                    fill: 'red',
+                }}),
+            animations: {
+                hover: {
+                    props: {
+                        scale: {x: 0.9, y:0.9},
+                    },
+                    duration: 50,
+                },
+            }
+        });
+        navTitleButton.anchor.set(0.5);
+        fitToParent(navTitleButton, width, height * 0.8);
+        navTitleButton.x = x + navTitleButton.width;
+        navTitleButton.y = y + height / 2;
+        navTitleButton.on('pointerdown', () => onExitClicked());
+
         const timerText = new Text({
             text: store.elapsedTime,
             style: {
@@ -129,31 +159,7 @@ class TopBar extends Container {
             timerText.text = store.elapsedTime;
         }
 
-        const navTitleButton = new FancyButton({
-            defaultView: new Text({
-                text: '타이틀로',
-                style: {
-                    fontFamily: 'Ownglyph StudyHard Rg',
-                    fontSize: 50,
-                    fill: 'black',
-                }}),
-            animations: {
-                hover: {
-                    props: {
-                        scale: {x: 0.9, y:0.9},
-                    },
-                    duration: 50,
-                },
-            }
-        });
-        navTitleButton.anchor.set(0.5);
-        fitToParent(navTitleButton, width, height * 0.8);
-        navTitleButton.x = x + width - navTitleButton.width;
-        navTitleButton.y = y + height / 2;
-        navTitleButton.on('pointerdown', () => onExitClicked());
-
-        this.addChild(timerText);
-        this.addChild(navTitleButton);
+        this.addChild(navTitleButton, timerText);
     }
 }
 
