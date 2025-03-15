@@ -38,7 +38,7 @@ class Petal extends Container {
             const top = -this.stageHeight * 0.1;
             const bottom = this.stageHeight;
             if (this.y > bottom * 1.1) this.y = top;
-            if (this.y < bottom - this.height) {
+            if (this.y < bottom - (this.height)/2) {
                 this.x += this._drift ;
                 this.y += this._speed;
                 this._theta += 0.1;
