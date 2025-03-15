@@ -1,4 +1,4 @@
-import { BlurFilter, Container, FillInput, Graphics, Texture } from "pixi.js";
+import { BlurFilter, Container, FillInput, Graphics } from "pixi.js";
 import { Scene } from "./scene";
 
 export interface PopupParam { x: number, y: number, width: number, height: number, style: FillInput, scene: Scene };
