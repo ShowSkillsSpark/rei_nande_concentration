@@ -75,8 +75,11 @@ class SizeButton extends TitleButton {
         super({...param, text: store.cardCountString});
 
         this.on('pointerdown', () => {
-            store.nextCardCount();
+            const lastCount = store.cardCount;
+            const currCount = store.nextCardCount();
             this.text = store.cardCountString;
+            if (lastCount < currCount) sound.play(store.loadRandomVoice(store.VOICE.INCREASE)[0]);
+            else sound.play(store.loadRandomVoice(store.VOICE.REDUCE)[0]);
         });
     }
 }

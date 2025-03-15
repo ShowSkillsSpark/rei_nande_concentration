@@ -90,6 +90,7 @@ class ExitPopup extends Popup {
         noButton.y = this.boxHeight * 0.6;
         noButton.on('pointerdown', () => {
             // 소리: 겠냐에요, 화이팅, 응원해줘 등
+            sound.play(store.loadRandomVoice(store.VOICE.CONTINUE)[0]);
             this.open = false;
         });
         noButton.on('pointerenter', () => {

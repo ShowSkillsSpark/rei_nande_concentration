@@ -73,7 +73,7 @@ export class HanabiraOverlay extends Container {
     constructor({app}: HanabiraOverlayParam) {
         super();
         this._ticker = new Ticker();
-        this._maxPetalCount = 50;
+        this._maxPetalCount = 100;
 
         this._ticker.autoStart = false;
 

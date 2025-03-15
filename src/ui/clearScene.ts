@@ -87,6 +87,7 @@ export class ClearScene extends Scene {
         backButton.x = this.horizontal_center;
         backButton.y = this.sceneHeight * 0.8;
         backButton.on('pointerdown', () => {
+            sound.play(store.loadRandomVoice(store.VOICE.FINISH)[0]);
             navigator.navScene(navigator.SCENE.TITLE);
         });
 

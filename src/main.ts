@@ -10,7 +10,7 @@ import { HanabiraOverlay } from "./ui/hanabiraOverlay";
     const app = new Application();
 
     // Initialize the application
-    await app.init({ background: "#ffe8ee", resizeTo: window });
+    await app.init({ background: "#ffe8ee", resizeTo: window, antialias: true });
 
     // Append the application canvas to the document body
     document.getElementById("pixi-container")!.appendChild(app.canvas);
