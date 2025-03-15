@@ -170,10 +170,9 @@ export const store = new class {
             "/rei_nande_concentration/assets/sound/jaja/jaja_20250311_4600-5250_3.wav",
         ],
     }
-    private _toVoiceName(key: string, id: number) { return `${key}-${id}`; }
     loadVoice(key: string, id: number) {
-        console.log(`voice key:${key} id:${id}`);
-        const voiceName = this._toVoiceName(key, id);
+        const voiceName = `voice-${key}-${id}`;
+        console.log(`load voice ${voiceName}`);
         if (!sound.exists(voiceName)) sound.add(voiceName, this._voiceMap[key][id]);
         return voiceName;
     }

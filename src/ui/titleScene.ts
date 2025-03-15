@@ -158,7 +158,6 @@ export class TitleScene extends Scene {
         this.scene.addChild(voiceTypeButton);
         this.scene.addChild(sizeButton);
         this.scene.addChild(creditButton);
-
     }
 
     onNavigated = (): void => {}
