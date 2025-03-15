@@ -21,7 +21,7 @@ class Petal extends Container {
         const petalWidth = Math.random() * 3 + 3;
         const petalHeight = petalWidth + 3;
         this._petalTexture = new Graphics().ellipse(0, 0, petalWidth, petalHeight).fill(0xFFFFFF);
-        this._petalTexture.alpha = 0.9;
+        this._petalTexture.alpha = Math.random() * 0.1 + 0.8;
 
         this._theta = Math.random() * 100;
         this._drift = Math.random() + 1 - petalWidth / 12 + 0.5;
@@ -38,8 +38,8 @@ class Petal extends Container {
             const top = -this.stageHeight * 0.1;
             const bottom = this.stageHeight;
             if (this.y > bottom * 1.1) this.y = top;
-            if (this.y < bottom) {
-                this.x += this._drift;
+            if (this.y < bottom - (this.height)/2) {
+                this.x += this._drift ;
                 this.y += this._speed;
                 this._theta += 0.1;
                 this._petalTexture.rotation -= this._spin;
@@ -49,6 +49,9 @@ class Petal extends Container {
 
             this._petalTexture.x = Math.cos(this._theta) * this._radius;
         });
+
+        this.on('pointerenter', () => this.initPosition());
+        this.eventMode = 'static';
     }
 
     initPosition() {
@@ -70,7 +73,7 @@ export class HanabiraOverlay extends Container {
     constructor({app}: HanabiraOverlayParam) {
         super();
         this._ticker = new Ticker();
-        this._maxPetalCount = 50;
+        this._maxPetalCount = 100;
 
         this._ticker.autoStart = false;
 

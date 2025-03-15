@@ -1,7 +1,6 @@
 import { sound } from "@pixi/sound";
-import { assets } from "./assets";
 import { shuffle } from "./util";
-import { Ticker } from "pixi.js";
+import { Assets, Ticker } from "pixi.js";
 
 export const store = new class {
     // voice type
@@ -9,14 +8,15 @@ export const store = new class {
     private _voiceTypeIndex = 0;
 
     get voiceType() { return this._availableVoiceTypeList[this._voiceTypeIndex]; }
+    get nextVoiceType() {
+        this._voiceTypeIndex = (this._voiceTypeIndex + 1) % this._availableVoiceTypeList.length;
+        return this.voiceType;
+    }
     get voiceTypeString() {
         switch(this.voiceType) {
             case 'nande': return '난데';
             default: return 'ERROR';
         }
-    }
-    nextVoiceType() {
-        this._voiceTypeIndex = (this._voiceTypeIndex + 1) % this._availableVoiceTypeList.length;
     }
 
     // card count
@@ -27,28 +27,9 @@ export const store = new class {
     get cardCountString() {
         return `${this.cardCount} x ${this.cardCount}`;
     }
-    nextCardCount() { this._cardCountIndex = (this._cardCountIndex + 1) % this._availableCardCountList.length; }
-
-    // game logic
-    private _voiceIdList: number[] = [];
-
-    get voiceIdList() { return this._voiceIdList; }
-    get newVoiceIdList() {
-        // 사용할 음성 선택
-        let voiceIdList = Object.keys(assets.sound[store.voiceType]).map(Number);
-        for (const voiceId of voiceIdList) {
-            if (sound.exists(`${store.voiceType}-${voiceId}`)) continue;
-            sound.add(`${store.voiceType}-${voiceId}`, assets.sound[store.voiceType][voiceId]);
-        }
-
-        // 카드 배치
-        voiceIdList = shuffle(voiceIdList).slice(0, store.cardCount * store.cardCount / 2);
-        voiceIdList = voiceIdList.concat(voiceIdList);
-        voiceIdList = shuffle(voiceIdList);
-
-        // 초기화
-        this._voiceIdList = voiceIdList;
-        return this._voiceIdList;
+    nextCardCount() {
+        this._cardCountIndex = (this._cardCountIndex + 1) % this._availableCardCountList.length;
+        return this.cardCount;
     }
 
     // timer
@@ -84,5 +65,151 @@ export const store = new class {
         if (this._startDate == null) return (0).toFixed(1) + postfix;
         if (!this._stopTimer) this._endDate = new Date();
         return ((this._endDate.getTime() - this._startDate.getTime()) / 1000).toFixed(1) + postfix;
+    }
+
+    // voice
+    VOICE = {
+        START: 'start',
+        NANDE: 'nande',
+        INCREASE: 'increase',
+        REDUCE: 'reduce',
+        CORRECT: 'correct',
+        WRONG: 'wrong',
+        GIVEUP: 'giveup',
+        LOSE: 'lose',
+        CONTINUE: 'continue',
+        CLEAR: 'clear',
+        FINISH: 'finish',
+    }
+    private _voiceMap: {[key: string]: string[]} = {
+        'start': [
+            "/rei_nande_concentration/assets/voice/hello/hello_20250310_1025-1035.wav",
+            "/rei_nande_concentration/assets/voice/hello/hello_20250310_1115-1125.wav",
+            "/rei_nande_concentration/assets/voice/hello/hello_20250310_1130-1140.wav",
+            "/rei_nande_concentration/assets/voice/hello/konrei_20250310_1115-1125.wav",
+            "/rei_nande_concentration/assets/voice/hello/konrei_20250310_1130-1140.wav",
+        ],
+        'nande': [
+            "/rei_nande_concentration/assets/voice/nande/nande_20250309_1000-1002.wav",
+            "/rei_nande_concentration/assets/voice/nande/nande_20250309_1003-1005.wav",
+            "/rei_nande_concentration/assets/voice/nande/nande_20250309_1045-1050.wav",
+            "/rei_nande_concentration/assets/voice/nande/nande_20250309_1050-1100.wav",
+            "/rei_nande_concentration/assets/voice/nande/nande_20250310_2230-2240_1.wav",
+            "/rei_nande_concentration/assets/voice/nande/nande_20250310_2230-2240_2.wav",
+            "/rei_nande_concentration/assets/voice/nande/nande_20250310_3050-3100.wav",
+            "/rei_nande_concentration/assets/voice/nande/nande_20250310_3920-3930.wav",
+            "/rei_nande_concentration/assets/voice/nande/nande_20250310_3950-4000.wav",
+            "/rei_nande_concentration/assets/voice/nande/nande_20250310_4020-4030.wav",
+            "/rei_nande_concentration/assets/voice/nande/nande_20250310_4045-4055.wav",
+            "/rei_nande_concentration/assets/voice/nande/nande_20250310_15530-15540.wav",
+            "/rei_nande_concentration/assets/voice/nande/nande_20250310_15720-15730.wav",
+            "/rei_nande_concentration/assets/voice/nande/nande_20250310_24335-24345.wav",
+            "/rei_nande_concentration/assets/voice/nande/nande_20250310_24530-24540.wav",
+            "/rei_nande_concentration/assets/voice/nande/nande_20250310_24625-24635.wav",
+            "/rei_nande_concentration/assets/voice/nande/nande_20250310_30335-30345.wav",
+            "/rei_nande_concentration/assets/voice/nande/nande_20250310_30525-30535.wav",
+            "/rei_nande_concentration/assets/voice/nande/nande_20250310_35110-35120.wav",
+        ],
+        'increase': [
+            "/rei_nande_concentration/assets/voice/suki/suki_20250311_4600-5250_1.wav",
+            "/rei_nande_concentration/assets/voice/suki/suki_20250311_4600-5250_2.wav",
+        ],
+        'reduce': [
+            "/rei_nande_concentration/assets/voice/reduce/reduce_20250311_4600-5250_1.wav",
+            "/rei_nande_concentration/assets/voice/reduce/reduce_20250311_4600-5250_2.wav",
+        ],
+        'correct': [
+            "/rei_nande_concentration/assets/voice/thx/thx_20250310_1115-1125_1.wav",
+            "/rei_nande_concentration/assets/voice/thx/thx_20250310_1115-1125_2.wav",
+            "/rei_nande_concentration/assets/voice/thx/thx_20250310_14830-14840.wav",
+            "/rei_nande_concentration/assets/voice/thx/thx_20250310_34110-34120.wav",
+            "/rei_nande_concentration/assets/voice/thx/thx_20250310_34955-35005.wav",
+            "/rei_nande_concentration/assets/voice/yoshi/yoshi_20250310_1025-1035.wav",
+            "/rei_nande_concentration/assets/voice/wow/wow_20250311_4600-5250_1.wav",
+            "/rei_nande_concentration/assets/voice/wow/wow_20250311_4600-5250_2.wav",
+            "/rei_nande_concentration/assets/voice/wow/wow_20250311_4600-5250_3.wav",
+        ],
+        'wrong': [
+            "/rei_nande_concentration/assets/voice/haa/haa_20250310_24540-24550.wav",
+            "/rei_nande_concentration/assets/voice/haa/haa_20250310_24600-24610.wav",
+            "/rei_nande_concentration/assets/voice/hen/hen_20250310_1015-1025.wav",
+            "/rei_nande_concentration/assets/voice/hen/hen_20250310_1025-1035.wav",
+            "/rei_nande_concentration/assets/voice/hidoi/hidoi_20250310_24610-24620.wav",
+            // "/rei_nande_concentration/assets/voice/sorry/sorry_20250310_15530-15540.wav", // TODO: 에러 발생함.
+            // "/rei_nande_concentration/assets/voice/sorry/sorry_20250310_22735-22745.wav", // TODO: 에러 발생함.
+        ],
+        'giveup': [
+            "/rei_nande_concentration/assets/voice/hee/hee_20250310_1130-1140.wav",
+            "/rei_nande_concentration/assets/voice/giveup/giveup_20250311_4600-5250_1.wav",
+            "/rei_nande_concentration/assets/voice/really/really_20250311_4600-5250_1.wav",
+            "/rei_nande_concentration/assets/voice/what/what_20250311_4600-5250_2.wav",
+        ],
+        'lose': [
+            "/rei_nande_concentration/assets/voice/zako/zako_20250310_3915-3925.wav",
+            "/rei_nande_concentration/assets/voice/zako/zako_20250310_3955-4015.wav",
+            "/rei_nande_concentration/assets/voice/zako/zako_20250310_24600-24610_1.wav",
+            "/rei_nande_concentration/assets/voice/zako/zako_20250310_24600-24610_2.wav",
+            "/rei_nande_concentration/assets/voice/kk/haha_20250311_4600-5250_1.wav",
+            "/rei_nande_concentration/assets/voice/iknow/iknow_20250311_4600-5250_1.wav",
+        ],
+        'continue': [
+            "/rei_nande_concentration/assets/voice/no/no_20250311_4600-5250_1.wav",
+            "/rei_nande_concentration/assets/voice/no/no_20250311_4600-5250_2.wav",
+            "/rei_nande_concentration/assets/voice/momo/momo_20250311_4600-5250_1.wav",
+            "/rei_nande_concentration/assets/voice/momo/momo_20250311_4600-5250_2.wav",
+        ],
+        'clear': [
+            "/rei_nande_concentration/assets/voice/bam/bam_20250311_4600-5250_1.wav",
+            "/rei_nande_concentration/assets/voice/bam/bam_20250311_4600-5250_2.wav",
+            "/rei_nande_concentration/assets/voice/bam/bam_20250311_4600-5250_3.wav",
+            "/rei_nande_concentration/assets/voice/clap/clap_20250311_4600-5250_1.wav",
+        ],
+        'finish': [
+            "/rei_nande_concentration/assets/voice/jaja/jaja_20250311_4600-5250_1.wav",
+            "/rei_nande_concentration/assets/voice/jaja/jaja_20250311_4600-5250_2.wav",
+            "/rei_nande_concentration/assets/voice/jaja/jaja_20250311_4600-5250_3.wav",
+        ],
+    }
+    loadVoice(key: string, id: number) {
+        const voiceName = `voice-${key}-${id}`;
+        console.log(`load voice ${voiceName}`);
+        if (!sound.exists(voiceName)) sound.add(voiceName, this._voiceMap[key][id]);
+        return voiceName;
+    }
+    loadRandomVoice(key: string, count: number = 1) {
+        let voiceIdList = [...Array(this._voiceMap[key].length).keys()];
+        voiceIdList = shuffle(voiceIdList);
+        voiceIdList = voiceIdList.slice(0, count);
+
+        const voiceNameList = voiceIdList.map((id: number) => {
+            return this.loadVoice(key, id);
+        });
+
+        return voiceNameList;
+    }
+    newVoiceNameList() {
+        let voiceNameList = this.loadRandomVoice(this.voiceType, this.cardCount * this.cardCount / 2);
+        voiceNameList = voiceNameList.concat(voiceNameList);
+        voiceNameList = shuffle(voiceNameList);
+        return voiceNameList;
+    }
+
+    // image
+    IMAGE = {
+        READY: 'ready',
+        SELECTED: 'selected',
+        CORRECT: 'correct',
+        WRONG: 'wrong',
+        FINISH: 'finish',
+    }
+    private _imageMap: {[key: string]: string} = {
+        'ready': '/rei_nande_concentration/assets/icon/ready.png',
+        'selected': '/rei_nande_concentration/assets/icon/selected.png',
+        'correct': '/rei_nande_concentration/assets/icon/correct.png',
+        'wrong': '/rei_nande_concentration/assets/icon/wrong.png',
+        'finish': '/rei_nande_concentration/assets/icon/finish.png',
+    };
+    loadImage(key: string) {
+        return Assets.load(this._imageMap[key]);
     }
 }();

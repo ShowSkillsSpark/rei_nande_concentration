@@ -1,6 +1,6 @@
-import { Sprite, Texture, Assets } from "pixi.js";
-import { assets } from "../assets";
+import { Sprite, Texture } from "pixi.js";
 import { sound } from "@pixi/sound";
+import { store } from "../store";
 
 export enum CardState {
     Ready = 'ready',
@@ -38,28 +38,28 @@ export class Card extends Sprite {
         this._state = state;
         switch (state) {
             case CardState.Ready:
-                this.texture = await Assets.load(assets.image.ready);
+                this.texture = await store.loadImage(store.IMAGE.READY);
                 this.eventMode = 'static';
                 this.cursor = 'pointer';
                 break;
             case CardState.Selected:
-                this.texture = await Assets.load(assets.image.selected);
+                this.texture = await store.loadImage(store.IMAGE.SELECTED);
                 sound.play(this.voiceName, callback);
                 this.eventMode = 'passive';
                 this.cursor = 'default';
                 break;
             case CardState.Correct:
-                this.texture = await Assets.load(assets.image.correct);
+                this.texture = await store.loadImage(store.IMAGE.CORRECT);
                 this.eventMode = 'passive';
                 this.cursor = 'default';
                 break;
             case CardState.Wrong:
-                this.texture = await Assets.load(assets.image.wrong);
+                this.texture = await store.loadImage(store.IMAGE.WRONG);
                 this.eventMode = 'passive';
                 this.cursor = 'default';
                 break;
             case CardState.Finish:
-                this.texture = await Assets.load(assets.image.finish);
+                this.texture = await store.loadImage(store.IMAGE.FINISH);
                 this.eventMode = 'passive';
                 this.cursor = 'default';
                 break;
@@ -67,7 +67,7 @@ export class Card extends Sprite {
     }
 
     async playSound(callback: () => void = () => {}) {
-        sound.play(this.voiceName, callback);
+        sound.play(this._voiceName, callback);
     }
 
     get state () { return this._state; }
