@@ -21,7 +21,7 @@ import { HanabiraOverlay } from "./ui/hanabiraOverlay";
     await Assets.load('https://fastly.jsdelivr.net/gh/projectnoonnu/2411-3@1.0/Ownglyph_StudyHard-Rg.woff2');
     await Assets.load('https://fastly.jsdelivr.net/gh/projectnoonnu/2410-1@1.0/GumiRomanceTTF.woff2');
     await Assets.load('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2402_keris@1.0/TTHakgyoansimNamuL.woff2');
-
+    
     // 화면 연결
     const navigator = new Navigator(app);
     new TitleScene({

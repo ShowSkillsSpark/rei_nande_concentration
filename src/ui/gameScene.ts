@@ -102,6 +102,9 @@ class ExitPopup extends Popup {
         this.addChild(yesButton);
         this.addChild(noButton);
     }
+    onOpen = () => {
+        sound.play(store.loadRandomVoice(store.VOICE.GIVEUP)[0]);
+    }
 }
 
 // UI
@@ -273,8 +276,6 @@ export class GameScene extends Scene {
             x: this.sceneX, y: this.sceneY,
             width: this.sceneWidth, height: this.sceneHeight * 0.1,
             onExitClicked: () => {
-                const voiceName = store.loadRandomVoice(store.VOICE.GIVEUP)[0];
-                sound.play(voiceName);
                 this._exitPopup.open = true;
             },
         });
