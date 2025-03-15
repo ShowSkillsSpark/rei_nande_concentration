@@ -1,5 +1,4 @@
-import { Container, Texture, Text, Assets } from "pixi.js";
-import { assets } from "../assets";
+import { Container, Texture, Text } from "pixi.js";
 import { Card, CardState } from "./card";
 import { fitToParent } from "../util";
 import { store } from "../store";
@@ -9,11 +8,11 @@ import { Navigator } from "./navigator";
 import { sound } from "@pixi/sound";
 import { Popup, PopupParam } from "./popup";
 
-interface ExitPopupParam extends PopupParam { looseSoundNameList: string[], navigator: Navigator };
+interface ExitPopupParam extends PopupParam { navigator: Navigator };
 class ExitPopup extends Popup {
     constructor(param: ExitPopupParam) {
         super(param);
-        const { looseSoundNameList, navigator } = param;
+        const { navigator } = param;
 
         const titleText = new Text({
             text: '당신은... 자코입니까?',
@@ -55,7 +54,8 @@ class ExitPopup extends Popup {
         yesButton.y = this.boxHeight * 0.6;
         yesButton.on('pointerdown', () => {
             // 소리: 자코인건 인정. 자코라서 미안해, 와라와라 등
-            sound.play(looseSoundNameList[Math.floor(Math.random() * looseSoundNameList.length)], () => {
+            const voiceName = store.loadRandomVoice(store.VOICE.LOSE)[0];
+            sound.play(voiceName, () => {
                 this.open = false;
                 navigator.navScene(navigator.SCENE.TITLE);
             });
@@ -170,35 +170,33 @@ class TopBar extends Container {
 // 8 9 a b
 interface GameSpaceParam {
     x: number, y: number, width: number, height: number,
-    correctSoundNameList: string[],
-    wrongSoundNameList: string[],
     onClear: () => void,
 }
 class GameSpace extends Container {
-    constructor({x, y, width, height, correctSoundNameList, wrongSoundNameList, onClear}: GameSpaceParam) {
+    constructor({x, y, width, height, onClear}: GameSpaceParam) {
         super();
 
         this.x = x;
         this.y = y;
 
-        // voiceId 선택
-        const voiceIdList = store.newVoiceIdList;
-        console.log(voiceIdList);
+        const voiceNameList = store.newVoiceNameList();
+        console.log(voiceNameList);
 
         let correctCount = 0;
         let selectCount = 0;
 
         const cardMaxWidth = width / store.cardCount;
         const cardMaxHeight = height / store.cardCount;
+
         // 카드 생성
         let selectedCard: Card | null = null;
         const cardList: Card[] = [];
         for (let i = 0; i < store.cardCount; i++) {
             for (let j = 0; j < store.cardCount; j++) {
-                Assets.load(assets.image.ready).then((readyTexture: Texture) => {
+                store.loadImage(store.IMAGE.READY).then((readyTexture: Texture) => {
                     const card = new Card({
                         x: i * cardMaxWidth, y: j * cardMaxHeight, width: cardMaxWidth, height: cardMaxHeight,
-                        readyTexture, voiceName: `${store.voiceType}-${voiceIdList[j * store.cardCount + i]}`
+                        readyTexture, voiceName: voiceNameList[j * store.cardCount + i],
                     });
                     cardList.push(card);
                     card.on("pointerdown", () => {
@@ -222,7 +220,8 @@ class GameSpace extends Container {
                                         card.setState(CardState.Selected, () => {
                                             firstCard.setState(CardState.Correct);
                                             card.setState(CardState.Correct);
-                                            sound.play(correctSoundNameList[Math.floor(Math.random() * correctSoundNameList.length)]);
+                                            const voiceName = store.loadRandomVoice(store.VOICE.CORRECT)[0];
+                                            sound.play(voiceName);
                                         });
                                     } else { // 게임 클리어
                                         store.stopTimer();
@@ -236,7 +235,8 @@ class GameSpace extends Container {
                                     card.setState(CardState.Selected, () => {
                                         firstCard.setState(CardState.Wrong);
                                         card.setState(CardState.Wrong);
-                                        sound.play(wrongSoundNameList[Math.floor(Math.random() * wrongSoundNameList.length)], () => {
+                                        const voiceName = store.loadRandomVoice(store.VOICE.WRONG)[0];
+                                        sound.play(voiceName, () => {
                                             firstCard.setState(CardState.Ready);
                                             card.setState(CardState.Ready);
                                         });
@@ -255,33 +255,25 @@ class GameSpace extends Container {
 // UI
 // 10% topBar
 // 90% game space for cards
-interface GameSceneParam extends SceneParam {
-    correctSoundNameList: string[],
-    wrongSoundNameList: string[],
-    giveupSoundNameList: string[],
-    looseSoundNameList: string[],
-};
 export class GameScene extends Scene {
     private _topBar: TopBar;
     private _gameSpace: GameSpace | null = null;
     private _exitPopup: ExitPopup;
     private _navigator;
 
-    private _correctSoundNameList;
-    private _wrongSoundNameList;
+    constructor(param: SceneParam) {
+        super(param);
 
-    constructor({ correctSoundNameList, wrongSoundNameList, giveupSoundNameList, looseSoundNameList, navigator, sceneName }: GameSceneParam) {
-        super({ navigator, sceneName });
+        const { navigator } = param;
 
-        this._correctSoundNameList = correctSoundNameList;
-        this._wrongSoundNameList = wrongSoundNameList;
         this._navigator = navigator;
 
         this._topBar = new TopBar({
             x: this.sceneX, y: this.sceneY,
             width: this.sceneWidth, height: this.sceneHeight * 0.1,
             onExitClicked: () => {
-                sound.play(giveupSoundNameList[Math.floor(Math.random() * giveupSoundNameList.length)]);
+                const voiceName = store.loadRandomVoice(store.VOICE.GIVEUP)[0];
+                sound.play(voiceName);
                 this._exitPopup.open = true;
             },
         });
@@ -295,7 +287,6 @@ export class GameScene extends Scene {
             style: 0xFFFFFF,
             scene: this,
             navigator,
-            looseSoundNameList,
         });
 
         this.scene.addChild(this._topBar);
@@ -303,14 +294,13 @@ export class GameScene extends Scene {
     }
 
     onNavigated = () => {
+        store.resetTimer();
         if (this._gameSpace) this.scene.removeChild(this._gameSpace);
 
         const size = Math.min(this.sceneWidth, this.sceneHeight * 0.9);
         this._gameSpace = new GameSpace({
             x: this.horizontal_center - size / 2, y: this.sceneHeight * 0.1,
             width: size, height: size,
-            correctSoundNameList: this._correctSoundNameList,
-            wrongSoundNameList: this._wrongSoundNameList,
             onClear: () => {
                 // 소리: 빰빠카빰
                 this._navigator.navScene(this._navigator.SCENE.CLEAR);

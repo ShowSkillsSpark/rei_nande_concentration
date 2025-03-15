@@ -38,7 +38,7 @@ class TitleButton extends FancyButton {
 class StartButton extends TitleButton {
     private _clicked = false;
 
-    constructor(param: TitleButtonParam, startSoundNameList: string[], navGameScene: () => void) {
+    constructor(param: TitleButtonParam, navGameScene: () => void) {
         super({...param, text: '콘레이'});
 
         this.on('pointerdown', () => {
@@ -47,8 +47,8 @@ class StartButton extends TitleButton {
             this._clicked = true;
 
             // 무작위 게임 시작 음성 재생
-            const startSoundName = startSoundNameList[Math.floor(Math.random() * startSoundNameList.length)];
-            sound.play(startSoundName, () => {
+            const startVoiceName = store.loadRandomVoice(store.VOICE.START)[0];
+            sound.play(startVoiceName, () => {
                 navGameScene();
                 this._clicked = false;
             });
@@ -61,8 +61,10 @@ class VoiceTypeButton extends TitleButton {
         super({...param, text: store.voiceTypeString});
 
         this.on('pointerdown', () => {
-            store.nextVoiceType();
+            const voiceType = store.nextVoiceType;
             this.text = store.voiceTypeString;
+            const voiceName = store.loadRandomVoice(voiceType)[0];
+            sound.play(voiceName);
         });
     }
 
@@ -94,12 +96,11 @@ class CreditButton extends TitleButton {
 // voiceTypeButton
 // sizeButton
 // creditButton
-interface TitleSceneParam extends SceneParam { startSoundNameList: string[] };
 export class TitleScene extends Scene {
-    constructor(param: TitleSceneParam) {
+    constructor(param: SceneParam) {
         super(param);
 
-        const { startSoundNameList, navigator } = param;
+        const { navigator } = param;
 
         const title = new Text({
             text: '하나비라는 신경쇠약',
@@ -132,7 +133,7 @@ export class TitleScene extends Scene {
             x: (this.scene.width - buttonWidht) / 2,
             y: this.scene.height * 0.35 + (buttonHeight + buttonGap) * 0,
             width: buttonWidht, height: buttonHeight,
-        }, startSoundNameList, () => navigator.navScene(navigator.SCENE.GAME));
+        }, () => navigator.navScene(navigator.SCENE.GAME));
         const voiceTypeButton = new VoiceTypeButton({
             x: (this.scene.width - buttonWidht) / 2,
             y: this.scene.height * 0.35 + (buttonHeight + buttonGap) * 1,
@@ -157,7 +158,5 @@ export class TitleScene extends Scene {
 
     }
 
-    onNavigated = (): void => {
-        store.resetTimer();
-    }
+    onNavigated = (): void => {}
 }

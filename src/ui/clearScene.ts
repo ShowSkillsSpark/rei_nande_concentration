@@ -5,6 +5,7 @@ import { fitToParent } from "../util";
 import { store } from "../store";
 import { Navigator } from "./navigator";
 import { HanabiraOverlay } from "./hanabiraOverlay";
+import { sound } from "@pixi/sound";
 
 // UI
 // 게임 클리어!
@@ -106,6 +107,8 @@ export class ClearScene extends Scene {
     onNavigated = (navigator: Navigator) => {
         this._timerText.text = store.elapsedTime;
         // 소리: 빰빠카빰, 하나비라 다이스키, 결혼해줄래? 등
+        const clearVoiceName = store.loadRandomVoice(store.VOICE.CLEAR)[0];
+        sound.play(clearVoiceName);
         (navigator.getOverlay(navigator.OVERLAY.HANABIRA) as HanabiraOverlay).start();
     }
 }
