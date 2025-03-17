@@ -1,7 +1,6 @@
 import { sound } from "@pixi/sound";
 import { shuffle } from "./util";
 import { Assets, Ticker } from "pixi.js";
-import { version } from "../package.json";
 
 export const store = new class {
     // voice type
@@ -370,7 +369,6 @@ export const store = new class {
     }
     loadVoice(key: string, id: number) {
         const voiceName = `voice-${key}-${id}`;
-        console.log(`버전: ${version} , 목소리: ${voiceName}`);
         if (!sound.exists(voiceName)) sound.add(voiceName, this._voiceMap[key][id]);
         return voiceName;
     }

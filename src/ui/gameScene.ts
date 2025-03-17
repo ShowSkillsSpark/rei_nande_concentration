@@ -211,12 +211,10 @@ class GameSpace extends Container {
                                 if (selectCount == 0) { // 게임 시작 시점
                                     store.startTimer();
                                 }
-                                console.log('select 1st', card.voiceName);
                                 selectedCard = card;
                                 card.setState(CardState.Selected);
                             } else if (selectedCard !== card) { // 다른 카드가 선택되면
                                 selectCount++;
-                                console.log('select 2nd', card.voiceName);
                                 const firstCard = selectedCard;
                                 selectedCard = null;
                                 if (firstCard.voiceName === card.voiceName) { // 정답이면

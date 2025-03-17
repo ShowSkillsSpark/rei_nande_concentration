@@ -1,6 +1,7 @@
 import { Sprite, Texture } from "pixi.js";
 import { sound } from "@pixi/sound";
 import { store } from "../store";
+import { version } from "../../package.json";
 
 export enum CardState {
     Ready = 'ready',
@@ -45,6 +46,7 @@ export class Card extends Sprite {
             case CardState.Selected:
                 this.texture = await store.loadImage(store.IMAGE.SELECTED);
                 sound.play(this.voiceName, callback);
+                console.log(`버전: ${version} , 목소리: ${this.voiceName}`);
                 this.eventMode = 'passive';
                 this.cursor = 'default';
                 break;
