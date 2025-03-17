@@ -5,6 +5,7 @@ import { Navigator } from "./ui/navigator";
 import { ClearScene } from "./ui/clearScene";
 import { HanabiraOverlay } from "./ui/hanabiraOverlay";
 import { LoadingScene } from "./ui/loadingScene";
+import { version } from "../package.json";
 
 (async () => {
     // Create a new application
@@ -16,6 +17,7 @@ import { LoadingScene } from "./ui/loadingScene";
     // Append the application canvas to the document body
     document.getElementById("pixi-container")!.appendChild(app.canvas);
     
+    console.log(`version: ${version}`)
     // 화면 연결
     const navigator = new Navigator(app);
     const loadingScene = new LoadingScene({
