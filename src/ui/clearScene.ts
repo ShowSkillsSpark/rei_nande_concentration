@@ -34,7 +34,7 @@ export class ClearScene extends Scene {
         clearText.y = this.sceneY + this.sceneHeight * 0.2;
 
         const levelText = new Text({
-            text: store.voiceTypeString + ' ' + store.cardCountString,
+            text: this.getLevelText(),
             style: {
                 fontFamily: 'TTHakgyoansimNamuL',
                 fontSize: 100,
