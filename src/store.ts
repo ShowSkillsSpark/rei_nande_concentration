@@ -341,7 +341,7 @@ export const store = new class {
             "/rei_nande_concentration/assets/voice/z/zako_20250310_3955-4015.wav",
             "/rei_nande_concentration/assets/voice/z/zako_20250310_24600-24610_1.wav",
             "/rei_nande_concentration/assets/voice/z/zako_20250310_24600-24610_2.wav",
-            "/rei_nande_concentration/assets/voice/k/haha_20250311_4600-5250_1.wav",
+            "/rei_nande_concentration/assets/voice/h/haha_20250311_4600-5250_1.wav",
             "/rei_nande_concentration/assets/voice/i/iknow_20250311_4600-5250_1.wav",
             "/rei_nande_concentration/assets/voice/j/joogle_20250316_0430-3500_15_1.wav",
             "/rei_nande_concentration/assets/voice/j/joogle_20250316_0430-3500_15_2.wav",
@@ -350,6 +350,7 @@ export const store = new class {
         'continue': [
             "/rei_nande_concentration/assets/voice/m/momo_20250311_4600-5250_1.wav",
             "/rei_nande_concentration/assets/voice/m/momo_20250311_4600-5250_2.wav",
+            "/rei_nande_concentration/assets/voice/y/yes_20250316_0430-3500_4_1.wav",
         ],
         'clear': [
             "/rei_nande_concentration/assets/voice/b/bam_20250311_4600-5250_1.wav",
@@ -357,7 +358,6 @@ export const store = new class {
             "/rei_nande_concentration/assets/voice/b/bam_20250311_4600-5250_3.wav",
             "/rei_nande_concentration/assets/voice/c/clap_20250311_4600-5250_1.wav",
             "/rei_nande_concentration/assets/voice/h/huhu_20250316_0430-3500_3_1.wav",
-            "/rei_nande_concentration/assets/voice/y/yes_20250316_0430-3500_4_1.wav",
         ],
         'finish': [
             "/rei_nande_concentration/assets/voice/j/jaja_20250311_4600-5250_1.wav",
@@ -369,7 +369,7 @@ export const store = new class {
     }
     loadVoice(key: string, id: number) {
         const voiceName = `voice-${key}-${id}`;
-        if (!sound.exists(voiceName)) sound.add(voiceName, this._voiceMap[key][id]);
+        if (!sound.exists(voiceName)) sound.add(voiceName, { url: this._voiceMap[key][id], preload: true });
         return voiceName;
     }
     loadRandomVoice(key: string, count: number = 1) {

@@ -160,10 +160,7 @@ http://creativecommons.org/licenses/by/3.0/`,
             musicName = makeMusicName(musicId);
         }
         console.log(`music: ${musicName}`);
-        if (!sound.exists(musicName)) {
-            const music = sound.add(musicName, this._musicList[musicId]);
-            music.volume = 0.1;
-        }
+        if (!sound.exists(musicName)) sound.add(musicName, { url: this._musicList[musicId], preload: true, volume: 0.1 });
         sound.play(musicName, () => this.playRandomMusic());
         this._lastMusicName = musicName;
     }
