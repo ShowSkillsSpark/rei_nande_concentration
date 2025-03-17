@@ -178,5 +178,6 @@ http://creativecommons.org/licenses/by/3.0/`,
         if (this._lastMusicName) sound.stop(this._lastMusicName);
         this._scrollBox.scrollTop();
         this._scrollTicker.stop();
+        (this._navigator.getOverlay(this._navigator.OVERLAY.HANABIRA) as HanabiraOverlay).stop();
     }
 }
