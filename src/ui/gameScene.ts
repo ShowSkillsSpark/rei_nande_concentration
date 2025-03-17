@@ -180,8 +180,6 @@ class GameSpace extends Container {
     constructor({x, y, width, height, onClear}: GameSpaceParam) {
         super();
 
-        console.log('억까는 https://cafe.naver.com/virtualidol/2988 에 댓글로 알려주세요.');
-
         this.x = x;
         this.y = y;
 

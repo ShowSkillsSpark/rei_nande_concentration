@@ -17,7 +17,8 @@ import { version } from "../package.json";
     // Append the application canvas to the document body
     document.getElementById("pixi-container")!.appendChild(app.canvas);
     
-    console.log(`version: ${version}`)
+    console.log(`version: ${version}`);
+
     // 화면 연결
     const navigator = new Navigator(app);
     const loadingScene = new LoadingScene({
@@ -26,6 +27,8 @@ import { version } from "../package.json";
     });
     navigator.navScene(navigator.SCENE.LOADING);
     await loadingScene.loading();
+
+    console.log('억까 신고는 https://cafe.naver.com/virtualidol/2988 에 댓글로 부탁드립니다.');
 
     new TitleScene({
         navigator,

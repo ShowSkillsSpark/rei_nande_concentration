@@ -45,8 +45,7 @@ export class Card extends Sprite {
                 break;
             case CardState.Selected:
                 this.texture = await store.loadImage(store.IMAGE.SELECTED);
-                console.log(`버전: ${version} , 목소리: ${this.voiceName}`);
-                sound.play(this.voiceName, callback);
+                this.playSound(callback);
                 this.eventMode = 'passive';
                 this.cursor = 'default';
                 break;
@@ -69,6 +68,7 @@ export class Card extends Sprite {
     }
 
     async playSound(callback: () => void = () => {}) {
+        console.log(`버전: ${version} , 목소리: ${this.voiceName}`);
         sound.play(this._voiceName, callback);
     }
 
