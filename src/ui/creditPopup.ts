@@ -159,7 +159,7 @@ http://creativecommons.org/licenses/by/3.0/`,
             musicId = (musicId + 1) % musicCount;
             musicName = makeMusicName(musicId);
         }
-        console.log(`credit music ${musicName}`);
+        console.log(`music: ${musicName}`);
         if (!sound.exists(musicName)) {
             const music = sound.add(musicName, this._musicList[musicId]);
             music.volume = 0.1;
