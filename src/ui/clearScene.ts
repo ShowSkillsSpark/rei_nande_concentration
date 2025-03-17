@@ -14,6 +14,8 @@ import { sound } from "@pixi/sound";
 // 타이틀로 돌아가기
 export class ClearScene extends Scene {
     private _timerText;
+    private _levelText;
+
     constructor(param: SceneParam) {
         super(param);
 
@@ -32,7 +34,7 @@ export class ClearScene extends Scene {
         clearText.y = this.sceneY + this.sceneHeight * 0.2;
 
         const levelText = new Text({
-            text: store.voiceTypeString + ' ' + store.cardCountString,
+            text: this.getLevelText(),
             style: {
                 fontFamily: 'TTHakgyoansimNamuL',
                 fontSize: 100,
@@ -103,9 +105,14 @@ export class ClearScene extends Scene {
             this._timerText.width = (1 + Math.sin(t) * 0.05) * defaultTimerTextWidth;
         });
         scoreTicker.start();
+
+        this._levelText = levelText;
     }
 
+    private getLevelText() { return `${store.voiceTypeString} ${store.cardCountString}`; }
+
     onNavigated = (navigator: Navigator) => {
+        this._levelText.text = this.getLevelText();
         this._timerText.text = store.elapsedTime;
         // 소리: 빰빠카빰, 하나비라 다이스키, 결혼해줄래? 등
         const clearVoiceName = store.loadRandomVoice(store.VOICE.CLEAR)[0];
