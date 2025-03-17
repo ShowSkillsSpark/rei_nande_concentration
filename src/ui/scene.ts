@@ -41,4 +41,5 @@ export abstract class Scene extends Container {
     get bottom() { return this.sceneY + this.sceneHeight; }
 
     abstract onNavigated: (navigator: Navigator) => void;
+    abstract onUnnavigated: (navigator: Navigator) => void;
 }

@@ -2,8 +2,13 @@ import { Container, Graphics, Text, TextStyle, Ticker } from "pixi.js";
 import { Popup, PopupParam } from "./popup";
 import { FancyButton, ScrollBox } from "@pixi/ui";
 import { sound } from "@pixi/sound";
+import { store } from "../store";
+import { HanabiraOverlay } from "./hanabiraOverlay";
+import { Navigator } from "./navigator";
 
+interface CreditPopupParam extends PopupParam { navigator: Navigator };
 export class CreditPopup extends Popup {
+    private _navigator;
     private _lastMusicName?: string;
     private _musicList = [
         '/rei_nande_concentration/assets/music/Pixel Peeker Polka - faster.webm',
@@ -15,9 +20,10 @@ export class CreditPopup extends Popup {
     private _scrollBox;
     private _scrollTicker;
 
-    constructor(param: PopupParam) {
+    constructor(param: CreditPopupParam) {
         super(param);
 
+        this._navigator = param.navigator;
         const scrollWidth = this.boxWidth - this.boxRadious;
         const scrollHeight = (this.boxHeight - this.boxRadious) * 0.75;
 
@@ -33,7 +39,7 @@ export class CreditPopup extends Popup {
         creditShowSkillsSpark.addChild(new Graphics().rect(0, 0, scrollWidth, scrollHeight).fill(0xFFFFFF), sssTitle, sssName);
         
         const creditRei = new Container();
-        const reiTitle = new Text({text: '출연', style: { fontSize: 50}});
+        const reiTitle = new Text({text: '목소리', style: { fontSize: 50}});
         reiTitle.anchor.set(0.5);
         reiTitle.x = scrollWidth * 0.5;
         reiTitle.y = scrollHeight * 0.3;
@@ -45,7 +51,7 @@ export class CreditPopup extends Popup {
         
         const creditCopyright = new Container();
         const copyright = new Text({
-            text: '게임 제작에 사용된\n캐릭터 및 목소리의 모든 권한은\n(주)브이아이에 있습니다.',
+            text: '게임 제작에 사용된\n이미지 및 음성의 모든 권한은\n(주)브이아이에 있습니다.',
             style: new TextStyle({ fontSize: 50, align: 'center' }),
         });
         copyright.anchor.set(0.5);
@@ -162,13 +168,16 @@ http://creativecommons.org/licenses/by/3.0/`,
         this._lastMusicName = musicName;
     }
     onOpen = () => {
+        sound.play(store.loadRandomVoice(store.VOICE.CREDIT)[0]);
         this.playRandomMusic();
         this._scrollBox.scrollTop();
         this._scrollTicker.start();
+        (this._navigator.getOverlay(this._navigator.OVERLAY.HANABIRA) as HanabiraOverlay).start();
     }
     onClose = () => {
         if (this._lastMusicName) sound.stop(this._lastMusicName);
         this._scrollBox.scrollTop();
         this._scrollTicker.stop();
+        (this._navigator.getOverlay(this._navigator.OVERLAY.HANABIRA) as HanabiraOverlay).stop();
     }
 }

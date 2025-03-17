@@ -112,4 +112,6 @@ export class ClearScene extends Scene {
         sound.play(clearVoiceName);
         (navigator.getOverlay(navigator.OVERLAY.HANABIRA) as HanabiraOverlay).start();
     }
+
+    onUnnavigated = () => {}
 }

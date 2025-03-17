@@ -12,4 +12,7 @@ export default defineConfig({
     }
   },
   base: "/rei_nande_concentration/",
+  define: {
+    global: 'window'
+  }
 });
