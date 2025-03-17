@@ -67,7 +67,7 @@ class ExitPopup extends Popup {
 
         const noButton = new FancyButton({
             defaultView: new Text({
-                text: '겠냐에요;',
+                text: '아니요;;', // 소리: 겠냐에요 추가 필요
                 style: {
                     fontFamily: 'GumiRomanceTTF',
                     fontSize: 100,
@@ -180,11 +180,13 @@ class GameSpace extends Container {
     constructor({x, y, width, height, onClear}: GameSpaceParam) {
         super();
 
+        console.log('억까는 https://cafe.naver.com/virtualidol/2988 에 댓글로 알려주세요.');
+
         this.x = x;
         this.y = y;
 
         const voiceNameList = store.newVoiceNameList();
-        console.log(voiceNameList);
+        // console.log(voiceNameList); // DEBUG purpose
 
         let correctCount = 0;
         let selectCount = 0;
@@ -218,7 +220,6 @@ class GameSpace extends Container {
                                 const firstCard = selectedCard;
                                 selectedCard = null;
                                 if (firstCard.voiceName === card.voiceName) { // 정답이면
-                                    console.log('correct');
                                     correctCount += 2;
                                     if (correctCount < store.cardCount ** 2) { // 1쌍 맞춤
                                         card.setState(CardState.Selected, () => {
@@ -235,7 +236,6 @@ class GameSpace extends Container {
                                         card.playSound(() => onClear());
                                     }
                                 } else { // 오답이면
-                                    console.log('wrong');
                                     card.setState(CardState.Selected, () => {
                                         firstCard.setState(CardState.Wrong);
                                         card.setState(CardState.Wrong);
@@ -311,4 +311,5 @@ export class GameScene extends Scene {
 
         this.scene.addChild(this._gameSpace);
     }
+    onUnnavigated = () => {}
 }

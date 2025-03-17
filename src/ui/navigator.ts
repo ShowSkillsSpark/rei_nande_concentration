@@ -8,6 +8,7 @@ export class Navigator {
     private _overlayMap: {[key: string]: Container } = {};
 
     SCENE = {
+        LOADING: 'loading',
         TITLE: 'title',
         GAME: 'game',
         CLEAR: 'clear',
@@ -29,11 +30,12 @@ export class Navigator {
     navScene(key: string) {
         if (this._currentScene) {
             this._currentScene.visible = false;
+            this._currentScene.onUnnavigated(this);
         }
         const nextScene = this._sceneMap[key]
-        nextScene.onNavigated(this);
-        nextScene.visible = true;
         this._currentScene = nextScene;
+        nextScene.visible = true;
+        nextScene.onNavigated(this);
     }
 
     getScene(key: string) { return this._sceneMap[key]; }

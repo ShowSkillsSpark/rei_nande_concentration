@@ -80,7 +80,7 @@ class SizeButton extends TitleButton {
             const currCount = store.nextCardCount();
             this.text = store.cardCountString;
             if (lastCount < currCount) sound.play(store.loadRandomVoice(store.VOICE.INCREASE)[0]);
-            else sound.play(store.loadRandomVoice(store.VOICE.REDUCE)[0]);
+            else sound.play(store.loadRandomVoice(store.VOICE.DECREASE)[0]);
         });
     }
 }
@@ -103,6 +103,7 @@ class CreditButton extends TitleButton {
 // sizeButton
 // creditButton
 export class TitleScene extends Scene {
+    private _creditPopup;
     constructor(param: SceneParam) {
         super(param);
 
@@ -159,6 +160,7 @@ export class TitleScene extends Scene {
             height: popupHeight,
             style: 0xFFFFFF,
             scene: this,
+            navigator,
         });
         const creditButton = new CreditButton({
             x: (this.scene.width - buttonWidht) / 2,
@@ -173,7 +175,12 @@ export class TitleScene extends Scene {
         this.scene.addChild(sizeButton);
         this.scene.addChild(creditButton);
         this.addChild(creditPopup);
+
+        this._creditPopup = creditPopup
     }
 
     onNavigated = (): void => {}
+    onUnnavigated = () => {
+        this._creditPopup.open = false;
+    }
 }
