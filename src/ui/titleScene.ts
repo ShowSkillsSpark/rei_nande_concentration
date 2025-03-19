@@ -111,7 +111,7 @@ export class TitleScene extends Scene {
 
         const bg = new Sprite();
 
-        store.loadImage(store.IMAGE.BG1).then((a) => {
+        store.loadImage(`bg${Math.round(Math.random() * 10) % 2 + 1}`).then((a) => {
             bg.texture = a;
             fitToParent(bg, this.sceneWidth, this.sceneHeight);
             bg.anchor.set(0.5);
