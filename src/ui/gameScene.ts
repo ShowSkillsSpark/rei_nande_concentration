@@ -179,7 +179,6 @@ interface GameSpaceParam {
 class GameSpace extends Container {
     constructor({x, y, width, height, onClear}: GameSpaceParam) {
         super();
-
         this.x = x;
         this.y = y;
 
