@@ -1,4 +1,4 @@
-import { Assets, Container, Graphics, Sprite, Text } from "pixi.js";
+import { Graphics, Sprite, Text } from "pixi.js";
 import { FancyButton } from "@pixi/ui";
 import { fitToParent } from "../util";
 import { Scene, SceneParam } from "./scene";
