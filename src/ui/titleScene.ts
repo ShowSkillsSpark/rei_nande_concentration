@@ -1,4 +1,4 @@
-import { Graphics, Text } from "pixi.js";
+import { Assets, Container, Graphics, Sprite, Text } from "pixi.js";
 import { FancyButton } from "@pixi/ui";
 import { fitToParent } from "../util";
 import { Scene, SceneParam } from "./scene";
@@ -109,6 +109,17 @@ export class TitleScene extends Scene {
 
         const { navigator } = param;
 
+        const bg = new Sprite();
+
+        store.loadImage(store.IMAGE.BG1).then((a) => {
+            bg.texture = a;
+            fitToParent(bg, this.sceneWidth, this.sceneHeight);
+            bg.anchor.set(0.5);
+            bg.x = this.sceneWidth / 2;
+            bg.y = this.sceneHeight / 2;
+            this.scene.alpha = 0.8;
+        });
+
         const title = new Text({
             text: '하나비라는 신경쇠약',
             style: {
@@ -169,6 +180,7 @@ export class TitleScene extends Scene {
             popup: creditPopup,
         });
 
+        this.scene.addChild(bg);
         this.scene.addChild(title);
         this.scene.addChild(startButton);
         this.scene.addChild(voiceTypeButton);
@@ -176,7 +188,7 @@ export class TitleScene extends Scene {
         this.scene.addChild(creditButton);
         this.addChild(creditPopup);
 
-        this._creditPopup = creditPopup
+        this._creditPopup = creditPopup;
     }
 
     onNavigated = (): void => {}

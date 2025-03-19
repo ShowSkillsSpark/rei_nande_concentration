@@ -403,6 +403,7 @@ export const store = new class {
         CORRECT: 'correct',
         WRONG: 'wrong',
         FINISH: 'finish',
+        BG1: 'bg1',
     }
     private _imageMap: {[key: string]: string} = {
         'ready': '/rei_nande_concentration/assets/icon/ready.png',
@@ -410,6 +411,7 @@ export const store = new class {
         'correct': '/rei_nande_concentration/assets/icon/correct.png',
         'wrong': '/rei_nande_concentration/assets/icon/wrong.png',
         'finish': '/rei_nande_concentration/assets/icon/finish.png',
+        'bg1': "/rei_nande_concentration/assets/imgs/1.jpg",
     };
     loadImage(key: string) {
         return Assets.load(this._imageMap[key]);
